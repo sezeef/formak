@@ -12,8 +12,8 @@ export const formSubmissionTable = sqliteTable("formSubmission", {
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
   updatedAt: integer("updatedAt", { mode: "timestamp" }).$onUpdate(
-    () => new Date(),
-  ),
+    () => new Date()
+  )
 });
 
 export type InsertForm = typeof formSubmissionTable.$inferInsert;

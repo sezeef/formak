@@ -8,8 +8,8 @@ export const userTable = sqliteTable("user", {
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
   updatedAt: integer("updatedAt", { mode: "timestamp" }).$onUpdate(
-    () => new Date(),
-  ),
+    () => new Date()
+  )
 });
 
 export type InsertUser = typeof userTable.$inferInsert;

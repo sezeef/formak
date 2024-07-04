@@ -3,7 +3,7 @@ import { getDictionary } from "@/lib/get-dictionary";
 import { type Locale } from "@/middleware";
 
 export default async function Home({
-  params: { lang },
+  params: { lang }
 }: {
   params: { lang: Locale };
 }) {

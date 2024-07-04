@@ -5,7 +5,7 @@ import { type NextRequest, NextResponse } from "next/server";
 // list of supported locales
 export const i18n = {
   defaultLocale: "en",
-  locales: ["en", "ar"],
+  locales: ["en", "ar"]
 } as const;
 
 // derived union type of supported locales
@@ -20,7 +20,7 @@ function getLocale(request: NextRequest) {
   // this variable is only used for this purpose and should never be mutated
   const mutLocales: string[] = [...i18n.locales];
   const languages = new Negotiator({ headers: negotiatorHeaders }).languages(
-    mutLocales,
+    mutLocales
   );
 
   // best option based on user preference ("Accept-Language" header)
@@ -33,8 +33,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const pathnameIsMissingLocale = i18n.locales.every(
-    (locale) =>
-      !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`,
+    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
 
   // Redirect if there is no locale
@@ -44,8 +43,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(
       new URL(
         `/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
-        request.url,
-      ),
+        request.url
+      )
     );
   }
 
@@ -53,5 +52,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"]
 };

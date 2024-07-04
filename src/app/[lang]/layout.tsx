@@ -4,7 +4,7 @@ import { i18n, type Locale } from "@/middleware";
 
 export const metadata: Metadata = {
   title: "Formak",
-  description: "Build and publish your own forms.",
+  description: "Build and publish your own forms."
 };
 
 export async function generateStaticParams() {
@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 
 export default function RootLayout({
   children,
-  params,
+  params
 }: Readonly<{
   children: React.ReactNode;
   params: { lang: Locale };

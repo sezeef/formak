@@ -5,7 +5,7 @@ import type { Locale } from "@/middleware";
 // We also get the default import for cleaner types
 const dictionaries = {
   en: () => import("@/dictionaries/en.json").then((module) => module.default),
-  ar: () => import("@/dictionaries/ar.json").then((module) => module.default),
+  ar: () => import("@/dictionaries/ar.json").then((module) => module.default)
 };
 
 export const getDictionary = async (locale: Locale) =>
