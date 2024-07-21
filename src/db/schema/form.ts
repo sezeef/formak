@@ -3,7 +3,9 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { userTable } from "@/db/schema/user";
 
 export const formTable = sqliteTable("form", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   userId: text("userId").notNull(),
   name: text("name")
     .notNull()

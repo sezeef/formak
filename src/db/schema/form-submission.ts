@@ -3,7 +3,9 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { formTable } from "@/db/schema/form";
 
 export const formSubmissionTable = sqliteTable("formSubmission", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   formId: text("formId")
     .notNull()
     .references(() => formTable.id, { onDelete: "cascade" }),
