@@ -1,5 +1,5 @@
 import "server-only";
-import type { Locale } from "@/middleware";
+import type { Locale } from "@/lib/locale";
 
 // We enumerate all dictionaries here for better linting and typescript support
 // We also get the default import for cleaner types
@@ -10,3 +10,5 @@ const dictionaries = {
 
 export const getDictionary = async (locale: Locale) =>
   dictionaries[locale]?.() ?? dictionaries.en();
+
+export type Dictionary = Awaited<ReturnType<typeof getDictionary>>;
