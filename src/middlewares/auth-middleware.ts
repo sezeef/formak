@@ -46,16 +46,6 @@ export function withAuthMiddleware(
 
       const encodedCallbackUrl = encodeURIComponent(callbackUrl);
 
-      console.log({
-        pathname: nextUrl.pathname,
-        publicRoutes,
-        authRoutes,
-        isLoggedIn,
-        isPublicRoute,
-        isAuthRoute,
-        callbackUrl,
-        encodedCallbackUrl
-      });
       return Response.redirect(
         new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
       );
