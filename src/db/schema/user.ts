@@ -56,6 +56,9 @@ export const verificationTokenTable = sqliteTable(
   })
 );
 
+export type InsertVerificationToken =
+  typeof verificationTokenTable.$inferInsert;
+
 export const passwordResetTokenTable = sqliteTable(
   "password-reset-token",
   {

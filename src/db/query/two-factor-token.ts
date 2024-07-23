@@ -41,3 +41,31 @@ export async function getTwoFactorTokenByEmail(email: string) {
     console.error("Failed to fetch two-factor auth token: ", error);
   }
 }
+
+export async function deleteTwoFactorTokenById(id: string) {
+  try {
+    return await db
+      .delete(twoFactorTokenTable)
+      .where(eq(twoFactorTokenTable.id, id));
+  } catch (error) {
+    console.error("Failed to delete verification token: ", error);
+  }
+}
+
+export async function deleteTwoFactorConfirmationById(id: string) {
+  try {
+    return await db
+      .delete(twoFactorConfirmationTable)
+      .where(eq(twoFactorConfirmationTable.id, id));
+  } catch (error) {
+    console.error("Failed to delete confirmation token: ", error);
+  }
+}
+
+export async function createTwoFactorConfirmation(userId: string) {
+  try {
+    return await db.insert(twoFactorConfirmationTable).values({ userId });
+  } catch (error) {
+    console.error("Failed to create confirmation token: ", error);
+  }
+}
