@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { i18n, type Locale } from "@/lib/locale";
 import { getDictionary } from "@/lib/get-dictionary";
 import { DictionaryProvider } from "@/components/dictionary-context";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "Formak",
@@ -23,9 +24,16 @@ export default async function RootLayout({
   const dictionary = await getDictionary(lang);
   return (
     <html lang={lang} dir={dictionary.dir}>
-      <body>
+      <body className="bg-background">
         <DictionaryProvider dictionary={dictionary} locale={lang}>
-          {children}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
         </DictionaryProvider>
       </body>
     </html>
