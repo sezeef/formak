@@ -1,27 +1,43 @@
-import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { relations, sql } from "drizzle-orm";
+import { integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 import { userTable } from "@/db/schema/user";
+import { formSubmissionTable } from "./form-submission";
 
-export const formTable = sqliteTable("form", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  userId: text("userId").notNull(),
-  name: text("name")
-    .notNull()
-    .references(() => userTable.id, { onDelete: "cascade" }),
-  description: text("description").notNull(),
-  content: text("content").notNull(),
-  shareUrl: text("shareUrl").notNull(),
-  visits: integer("visits").notNull(),
-  submissions: integer("submissions").notNull(),
-  createdAt: text("createdAt")
-    .default(sql`(CURRENT_TIMESTAMP)`)
-    .notNull(),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).$onUpdate(
-    () => new Date()
-  )
-});
+export const formTable = sqliteTable(
+  "form",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId")
+      .notNull()
+      .references(() => userTable.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    description: text("description"),
+    content: text("content"),
+    shareUrl: text("shareUrl").$defaultFn(() => crypto.randomUUID()),
+    visits: integer("visits").notNull().default(0),
+    submissions: integer("submissions").notNull().default(0),
+    published: integer("published", { mode: "boolean" }).default(false),
+    createdAt: text("createdAt")
+      .default(sql`(CURRENT_TIMESTAMP)`)
+      .notNull(),
+    updatedAt: integer("updatedAt", { mode: "timestamp" }).$onUpdate(
+      () => new Date()
+    )
+  },
+  (t) => ({
+    unq: unique().on(t.userId, t.name)
+  })
+);
 
 export type InsertForm = typeof formTable.$inferInsert;
 export type SelectForm = typeof formTable.$inferSelect;
+
+export const formRelations = relations(formTable, ({ one, many }) => ({
+  owner: one(userTable, {
+    fields: [formTable.userId],
+    references: [userTable.id]
+  }),
+  submissions: many(formSubmissionTable)
+}));

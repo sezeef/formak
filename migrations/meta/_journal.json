@@ -8,6 +8,27 @@
       "when": 1719303685907,
       "tag": "0000_motionless_shard",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1721734602687,
+      "tag": "0001_giant_master_mold",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1721825865627,
+      "tag": "0002_unique_wolfsbane",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1721827281604,
+      "tag": "0003_mushy_chronomancer",
+      "breakpoints": true
     }
   ]
 }

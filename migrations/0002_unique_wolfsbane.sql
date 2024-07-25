@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `form_userId_name_unique` ON `form` (`userId`,`name`);

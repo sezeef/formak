@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { formTable } from "@/db/schema/form";
 
@@ -20,3 +20,13 @@ export const formSubmissionTable = sqliteTable("formSubmission", {
 
 export type InsertForm = typeof formSubmissionTable.$inferInsert;
 export type SelectForm = typeof formSubmissionTable.$inferSelect;
+
+export const formSubmissionRelations = relations(
+  formSubmissionTable,
+  ({ one }) => ({
+    form: one(formTable, {
+      fields: [formSubmissionTable.formId],
+      references: [formTable.id]
+    })
+  })
+);

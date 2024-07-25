@@ -5,6 +5,7 @@ import {
   integer,
   primaryKey
 } from "drizzle-orm/sqlite-core";
+import { formTable } from "./form";
 
 export const USER_ROLES = {
   ADMIN: "ADMIN",
@@ -101,9 +102,10 @@ export const twoFactorConfirmationTable = sqliteTable(
   }
 );
 
-export const userRelations = relations(userTable, ({ one }) => ({
+export const userRelations = relations(userTable, ({ one, many }) => ({
   twoFactorConfirmations: one(twoFactorConfirmationTable, {
     fields: [userTable.id],
     references: [twoFactorConfirmationTable.userId]
-  })
+  }),
+  posts: many(formTable)
 }));
