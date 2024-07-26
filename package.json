@@ -13,7 +13,8 @@
     "db:studio": "drizzle-kit studio",
     "db:migrate": "drizzle-kit migrate",
     "db:drop-migrations": "drizzle-kit drop",
-    "db:host": "turso dev --db-file local.db"
+    "db:host": "turso dev --db-file local.db",
+    "val-dics": "./scripts/validate-dictionaries.sh ./src/dictionaries/"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.4.1",
