@@ -2,14 +2,16 @@
   "lang": "en",
   "dir": "ltr",
   "/": {
-    "body:welcome": "Welcome"
+    "body:welcome": "Welcome",
+    "site:name": "Formak"
   },
   "auth": {
     "head:title": "Formak Authenticator",
     "input.label:email": "Email",
     "input.label:password": "Password",
     "button:back-to-login": "Back to login",
-    "error:generic": "Something went wrong!"
+    "error:generic": "Something went wrong!",
+    "message:confirm-sent": "Confirmation email sent!"
   },
   "auth/login": {
     "button:login": "Login",
@@ -18,8 +20,7 @@
     "input.label:two-factor-code": "Two Factor Code",
     "link:forgot-password": "Forgot password?",
     "link:go-to-register": "Do you have an account?",
-    "head:sub-title": "Welcome back",
-    "message:success": "Confirmation email sent!"
+    "head:sub-title": "Welcome back"
   },
   "auth/register": {
     "input.label:name": "Name",
@@ -32,22 +33,34 @@
   },
   "auth/new-verification": {
     "head:sub-title": "Confirming your verification",
-    "error:no-token": "Missing token!"
+    "error:no-token": "Missing token!",
+    "message:email-verified": "Email verified!"
   },
   "auth/reset-password": {
     "button:reset-password": "Send reset email",
-    "head:sub-title": "Forgot your password?"
+    "head:sub-title": "Forgot your password?",
+    "message:reset-email-sent": "Reset email sent!"
   },
   "auth/new-password": {
     "head:sub-title": "Enter a new password",
-    "button:reset-password": "Reset password"
+    "button:reset-password": "Reset password",
+    "message:reset-success": "Password reset!"
   },
   "error": {
     "VAL_INVALID_FIELD": "Invalid fields!",
     "AUTH_INVALID_CRED": "Invalid credentials!",
     "AUTH_INVALID_CODE": "Invalid code!",
+    "AUTH_INVALID_TOKEN": "Invalid or missing token!",
+    "AUTH_EXPIRED_TOKEN": "Exprired token!",
     "AUTH_EXPIRED_CODE": "Expired code!",
     "AUTH_UNK_ERR": "Something went wrong!",
-    "SYS_EMAIL_SERVICE_ERR": "Failed to send email, please try again later."
+    "SYS_EMAIL_SERVICE_ERR": "Failed to send email, please try again later.",
+    "NET_UNAUTHORIZED": "Unauthorized access to the network resource.",
+    "SYS_DB_FAILURE": "Something went wrong!",
+    "SYS_DB_DOWN": "SYS_DB_DOWN",
+    "SYS_UNK_ERR": "Something went wrong!",
+    "SYS_INTERNAL_ERR": "Something went wrong!",
+    "AUTH_EXISTING_EMAIL": "Email already in use!",
+    "AUTH_INVALID_EMAIL": "Email not found!"
   }
 }

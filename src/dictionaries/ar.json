@@ -2,14 +2,16 @@
   "lang": "ar",
   "dir": "rtl",
   "/": {
-    "body:welcome": "مرحبًا"
+    "body:welcome": "مرحبًا",
+    "site:name": "فورمك"
   },
   "auth": {
     "head:title": "فورمك أمان",
     "input.label:email": "البريد الإلكتروني",
     "input.label:password": "كلمة المرور",
     "button:back-to-login": "العودة إلى تسجيل الدخول",
-    "error:generic": "حدث خطأ ما!"
+    "error:generic": "حدث خطأ ما!",
+    "message:confirm-sent": "تم إرسال رسالة تأكيد البريد الإلكتروني!"
   },
   "auth/login": {
     "button:login": "تسجيل الدخول",
@@ -18,8 +20,7 @@
     "input.label:two-factor-code": "رمز التحقق الثنائي",
     "link:forgot-password": "نسيت كلمة المرور؟",
     "link:go-to-register": "هل تريد إنشاء حساب؟",
-    "head:sub-title": "مرحبًا بعودتك",
-    "message:success": "تم إرسال رسالة تأكيد البريد الإلكتروني!"
+    "head:sub-title": "مرحبًا بعودتك"
   },
   "auth/register": {
     "input.label:name": "الاسم",
@@ -32,15 +33,18 @@
   },
   "auth/new-verification": {
     "head:sub-title": "تأكيد التحقق الخاص بك",
-    "error:no-token": "الرمز المميز مفقود!"
+    "error:no-token": "الرمز المميز مفقود!",
+    "message:email-verified": "تم التحقق من البريد الإلكتروني!"
   },
   "auth/reset-password": {
     "button:reset-password": "إرسال البريد الإلكتروني",
-    "head:sub-title": "نسيت كلمة المرور؟"
+    "head:sub-title": "نسيت كلمة المرور؟",
+    "message:reset-email-sent": "تم إرسال بريد إعادة التعيين!"
   },
   "auth/new-password": {
     "head:sub-title": "أدخل كلمة مرور جديدة",
-    "button:reset-password": "إعادة تعيين كلمة المرور"
+    "button:reset-password": "إعادة تعيين كلمة المرور",
+    "message:reset-success": "تم إعادة تعيين كلمة المرور!"
   },
   "error": {
     "VAL_INVALID_FIELD": "بيانات غير صحيحة",
@@ -48,6 +52,15 @@
     "AUTH_INVALID_CODE": "كود غير صالح!",
     "AUTH_EXPIRED_CODE": "كود منتهي الصلاحية!",
     "AUTH_UNK_ERR": "حدث خطأ ما!",
-    "SYS_EMAIL_SERVICE_ERR": "خدمة البريد الإلكتروني معطلة، حاول مرة أخرى لاحقًا"
+    "SYS_EMAIL_SERVICE_ERR": "خدمة البريد الإلكتروني معطلة، حاول مرة أخرى لاحقًا",
+    "NET_UNAUTHORIZED": "الوصول غير المصرح به إلى مورد الشبكة.",
+    "SYS_DB_FAILURE": "حدث خطأ ما!",
+    "SYS_DB_DOWN": "حدث خطأ ما!",
+    "SYS_UNK_ERR": "حدث خطأ ما!",
+    "SYS_INTERNAL_ERR": "حدث خطأ ما!",
+    "AUTH_EXISTING_EMAIL": "البريد الإلكتروني مستخدم بالفعل!",
+    "AUTH_INVALID_EMAIL": "البريد الإلكتروني غير موجود!",
+    "AUTH_INVALID_TOKEN": "رمز غير صالح أو مفقود!",
+    "AUTH_EXPIRED_TOKEN": "الرمز منتهي الصلاحية!"
   }
 }
