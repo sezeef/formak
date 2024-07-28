@@ -1,6 +1,17 @@
 import * as z from "zod";
+import { AppError, ERROR_CODES } from "@/lib/error";
 
-export const LoginSchema = z.object({
+export function unsafeValidate<T extends z.ZodTypeAny>(
+  schema: T,
+  input: unknown
+): z.infer<T> {
+  const validationResult = schema.safeParse(input);
+  if (!validationResult.success)
+    throw new AppError(ERROR_CODES.VAL_INVALID_FIELD);
+  return validationResult.data;
+}
+
+export const loginSchema = z.object({
   email: z.string().email({
     message: "Email is required"
   }),
@@ -9,8 +20,9 @@ export const LoginSchema = z.object({
   }),
   code: z.optional(z.string())
 });
+export type LoginSchema = z.infer<typeof loginSchema>;
 
-export const RegisterSchema = z.object({
+export const registerSchema = z.object({
   email: z.string().email({
     message: "Email is required"
   }),
@@ -21,15 +33,24 @@ export const RegisterSchema = z.object({
     message: "Name is required"
   })
 });
+export type RegisterSchema = z.infer<typeof registerSchema>;
 
-export const NewPasswordSchema = z.object({
+export const newPasswordSchema = z.object({
   password: z.string().min(6, {
     message: "Minimum of 6 characters required"
   })
 });
+export type NewPasswordSchema = z.infer<typeof newPasswordSchema>;
 
-export const ResetSchema = z.object({
+export const resetSchema = z.object({
   email: z.string().email({
     message: "Email is required"
   })
 });
+export type ResetSchema = z.infer<typeof resetSchema>;
+
+export const formSchema = z.object({
+  name: z.string().min(4),
+  description: z.string().optional()
+});
+export type FormSchema = z.infer<typeof formSchema>;
