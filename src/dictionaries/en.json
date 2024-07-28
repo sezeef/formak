@@ -3,7 +3,8 @@
   "dir": "ltr",
   "/": {
     "body:welcome": "Welcome",
-    "site:name": "Formak"
+    "site:name": "Formak",
+    "button:back-to-home": "Go back home"
   },
   "auth": {
     "head:title": "Formak Authenticator",
