@@ -67,7 +67,10 @@ export default function LoginPage() {
         })
         .catch((error) => {
           form.reset();
-          if (isAppError(error)) {
+          if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+            console.log("caught here");
+            throw error
+          } else if (isAppError(error)) {
             const code = error.message;
             setError(dictionary.error[code]);
           } else {

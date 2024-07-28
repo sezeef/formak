@@ -22,10 +22,7 @@ import {
 } from "@/db/query/two-factor-token";
 import { getTwoFactorConfirmationByUserId } from "@/db/query/two-factor-token";
 
-export async function login(
-  values: LoginSchema,
-  callbackUrl?: string | null
-) {
+export async function login(values: LoginSchema, callbackUrl?: string | null) {
   const { email, password, code } = unsafeValidate(loginSchema, values);
   const user = await handleGetUser(email);
 
@@ -43,7 +40,10 @@ export async function login(
       redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT
     });
   } catch (error) {
-    if (error instanceof AuthError && error.type === "CredentialsSignin") {
+    if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+      // This is a redirect, not an error. Re-throw it.
+      throw error;
+    } else if (error instanceof AuthError && error.type === "CredentialsSignin") {
       throw new AppError(ERROR_CODES.AUTH_INVALID_CRED);
     } else {
       throw new AppError(ERROR_CODES.AUTH_UNK_ERR);
