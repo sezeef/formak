@@ -18,8 +18,8 @@ export const formSubmissionTable = sqliteTable("formSubmission", {
   )
 });
 
-export type InsertForm = typeof formSubmissionTable.$inferInsert;
-export type SelectForm = typeof formSubmissionTable.$inferSelect;
+export type InsertFormSubmission = typeof formSubmissionTable.$inferInsert;
+export type SelectFormSubmission = typeof formSubmissionTable.$inferSelect;
 
 export const formSubmissionRelations = relations(
   formSubmissionTable,

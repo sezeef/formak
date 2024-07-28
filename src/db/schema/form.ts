@@ -1,7 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import { integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 import { userTable } from "@/db/schema/user";
-import { formSubmissionTable } from "./form-submission";
+import { formSubmissionTable } from "@/db/schema/form-submission";
 
 export const formTable = sqliteTable(
   "form",
@@ -15,7 +15,9 @@ export const formTable = sqliteTable(
     name: text("name").notNull(),
     description: text("description"),
     content: text("content"),
-    shareUrl: text("shareUrl").$defaultFn(() => crypto.randomUUID()),
+    shareUrl: text("shareUrl")
+      .notNull()
+      .$defaultFn(() => crypto.randomUUID()),
     visits: integer("visits").notNull().default(0),
     submissions: integer("submissions").notNull().default(0),
     published: integer("published", { mode: "boolean" }).default(false),

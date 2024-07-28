@@ -5,7 +5,7 @@ import {
   integer,
   primaryKey
 } from "drizzle-orm/sqlite-core";
-import { formTable } from "./form";
+import { formTable } from "@/db/schema/form";
 
 export const USER_ROLES = {
   ADMIN: "ADMIN",
