@@ -4,7 +4,7 @@
   "/": {
     "body:welcome": "مرحبًا",
     "site:name": "فورمك",
-    "button:back-to-home": "العودة إلى الصفحة الرئيسية",
+    "button:back-to-home": "العودة إلى الصفحة الرئيسية"
   },
   "auth": {
     "head:title": "فورمك أمان",
