@@ -1,5 +1,5 @@
 "use server";
-import { db } from "@/db";
+import { getDb } from "@/db";
 import {
   InsertVerificationToken,
   verificationTokenTable
@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 
 export async function getVerificationTokenByToken(token: string) {
   try {
+    const db = await getDb();
     return db
       .select()
       .from(verificationTokenTable)
@@ -20,6 +21,7 @@ export async function getVerificationTokenByToken(token: string) {
 
 export async function getVerificationTokenByEmail(email: string) {
   try {
+    const db = await getDb();
     return db
       .select()
       .from(verificationTokenTable)
@@ -32,6 +34,7 @@ export async function getVerificationTokenByEmail(email: string) {
 
 export async function deleteVerificationTokenById(id: string) {
   try {
+    const db = await getDb();
     return await db
       .delete(verificationTokenTable)
       .where(eq(verificationTokenTable.id, id));
@@ -46,6 +49,7 @@ export async function createVerificationToken({
   expires
 }: InsertVerificationToken) {
   try {
+    const db = await getDb();
     return await db
       .insert(verificationTokenTable)
       .values({ email, token, expires })

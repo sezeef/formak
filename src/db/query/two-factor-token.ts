@@ -1,5 +1,5 @@
 "use server";
-import { db } from "@/db";
+import { getDb } from "@/db";
 import { eq } from "drizzle-orm";
 import {
   twoFactorConfirmationTable,
@@ -8,6 +8,7 @@ import {
 
 export async function getTwoFactorConfirmationByUserId(userId: string) {
   try {
+    const db = await getDb();
     return await db
       .select()
       .from(twoFactorConfirmationTable)
@@ -20,6 +21,7 @@ export async function getTwoFactorConfirmationByUserId(userId: string) {
 
 export async function getTwoFactorTokenByToken(token: string) {
   try {
+    const db = await getDb();
     return await db
       .select()
       .from(twoFactorTokenTable)
@@ -32,6 +34,7 @@ export async function getTwoFactorTokenByToken(token: string) {
 
 export async function getTwoFactorTokenByEmail(email: string) {
   try {
+    const db = await getDb();
     return await db
       .select()
       .from(twoFactorTokenTable)
@@ -44,6 +47,7 @@ export async function getTwoFactorTokenByEmail(email: string) {
 
 export async function deleteTwoFactorTokenById(id: string) {
   try {
+    const db = await getDb();
     return await db
       .delete(twoFactorTokenTable)
       .where(eq(twoFactorTokenTable.id, id));
@@ -54,6 +58,7 @@ export async function deleteTwoFactorTokenById(id: string) {
 
 export async function deleteTwoFactorConfirmationById(id: string) {
   try {
+    const db = await getDb();
     return await db
       .delete(twoFactorConfirmationTable)
       .where(eq(twoFactorConfirmationTable.id, id));
@@ -64,6 +69,7 @@ export async function deleteTwoFactorConfirmationById(id: string) {
 
 export async function createTwoFactorConfirmation(userId: string) {
   try {
+    const db = await getDb();
     return await db.insert(twoFactorConfirmationTable).values({ userId });
   } catch (error) {
     console.error("Failed to create confirmation token: ", error);
