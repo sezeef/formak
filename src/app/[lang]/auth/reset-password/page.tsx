@@ -1,12 +1,16 @@
 "use client";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ResetSchema } from "@/lib/schemas";
+import { type ResetSchema, resetSchema } from "@/lib/schemas";
 import { reset } from "@/actions/auth/reset-password";
 import { useDictionary } from "@/components/dictionary-context";
 import { localize } from "@/lib/locale";
+import { AppError, ERROR_CODES, isAppError } from "@/lib/error";
+
+import { AuthCard } from "@/components/auth-card";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 
 import {
   Form,
@@ -17,10 +21,7 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { AuthCard } from "@/components/auth-card";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
 
 export default function ResetPasswordPage() {
   const { dictionary } = useDictionary();
@@ -28,22 +29,37 @@ export default function ResetPasswordPage() {
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof ResetSchema>>({
-    resolver: zodResolver(ResetSchema),
+  const form = useForm<ResetSchema>({
+    resolver: zodResolver(resetSchema),
     defaultValues: {
       email: ""
     }
   });
 
-  const onSubmit = (values: z.infer<typeof ResetSchema>) => {
+  const onSubmit = (values: ResetSchema) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      reset(values).then((data) => {
-        setError(data?.error);
-        setSuccess(data?.success);
-      });
+      reset(values)
+        .then(({ status }) => {
+          if (status === "REST_EMAIL_SENT") {
+            setSuccess(
+              dictionary["auth/reset-password"]["message:reset-email-sent"]
+            );
+          } else {
+            // should be unreachable
+            throw new AppError(ERROR_CODES.SYS_INTERNAL_ERR);
+          }
+        })
+        .catch((error) => {
+          if (isAppError(error)) {
+            const code = error.message;
+            setError(dictionary.error[code]);
+          } else {
+            setError(dictionary.error.AUTH_UNK_ERR);
+          }
+        });
     });
   };
 

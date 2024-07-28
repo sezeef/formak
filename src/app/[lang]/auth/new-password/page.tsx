@@ -1,11 +1,10 @@
 "use client";
-import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newPassword } from "@/actions/auth/new-password";
-import { NewPasswordSchema } from "@/lib/schemas";
+import { type NewPasswordSchema, newPasswordSchema } from "@/lib/schemas";
 import { localize } from "@/lib/locale";
 import { useDictionary } from "@/components/dictionary-context";
 
@@ -22,6 +21,7 @@ import { AuthCard } from "@/components/auth-card";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
+import { AppError, ERROR_CODES, isAppError } from "@/lib/error";
 
 export default function NewPasswordPage() {
   const { dictionary } = useDictionary();
@@ -32,22 +32,35 @@ export default function NewPasswordPage() {
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof NewPasswordSchema>>({
-    resolver: zodResolver(NewPasswordSchema),
+  const form = useForm<NewPasswordSchema>({
+    resolver: zodResolver(newPasswordSchema),
     defaultValues: {
       password: ""
     }
   });
 
-  const onSubmit = (values: z.infer<typeof NewPasswordSchema>) => {
+  const onSubmit = (values: NewPasswordSchema) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      newPassword(values, token).then((data) => {
-        setError(data?.error);
-        setSuccess(data?.success);
-      });
+      newPassword(values, token)
+        .then(({ status }) => {
+          if (status === "PASSWORD_RESET") {
+            setSuccess(dictionary["auth/new-password"]["message:reset-success"]);
+          } else {
+            // should be unreachable
+            throw new AppError(ERROR_CODES.SYS_INTERNAL_ERR);
+          }
+        })
+        .catch((error) => {
+          if (isAppError(error)) {
+            const code = error.message;
+            setError(dictionary.error[code]);
+          } else {
+            setError(dictionary.error.AUTH_UNK_ERR);
+          }
+        });
     });
   };
 

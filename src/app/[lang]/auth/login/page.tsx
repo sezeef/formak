@@ -1,13 +1,14 @@
 "use client";
-import * as z from "zod";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
+
 import { login } from "@/actions/auth/login";
-import { LoginSchema } from "@/lib/schemas";
+import { loginSchema, type LoginSchema } from "@/lib/schemas";
 import { localize } from "@/lib/locale";
+import { AppError, ERROR_CODES, isAppError } from "@/lib/error";
 
 import {
   Form,
@@ -24,7 +25,6 @@ import { AuthCard } from "@/components/auth-card";
 import { useDictionary } from "@/components/dictionary-context";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { AppError, ERROR_CODES, ErrorType, isAppError } from "@/lib/error";
 
 export default function LoginPage() {
   const { dictionary } = useDictionary();
@@ -40,31 +40,32 @@ export default function LoginPage() {
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: ""
     }
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = (values: LoginSchema) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
       login(values, callbackUrl)
-        .then((data) => {
-          if (data?.success) {
+        .then(({ status }) => {
+          if (status === "VERIFICATION_SENT") {
             form.reset();
-            setSuccess(data.success);
-          }
-
-          if (data?.twoFactor) {
+            setSuccess(dictionary.auth["message:confirm-sent"]);
+          }else if (status === "2FA_SENT") {
             setShowTwoFactor(true);
+          } else {
+            // should be unreachable
+            throw new AppError(ERROR_CODES.SYS_INTERNAL_ERR);
           }
         })
-        .catch((error: unknown) => {
+        .catch((error) => {
           form.reset();
           if (isAppError(error)) {
             const code = error.message;

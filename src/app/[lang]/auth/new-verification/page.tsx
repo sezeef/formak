@@ -9,6 +9,7 @@ import { AuthCard } from "@/components/auth-card";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useDictionary } from "@/components/dictionary-context";
+import { isAppError } from "@/lib/error";
 
 export default function NewVerificationPage() {
   const { dictionary } = useDictionary();
@@ -28,12 +29,20 @@ export default function NewVerificationPage() {
     }
 
     newVerification(token)
-      .then((data) => {
-        setSuccess(data.success);
-        setError(data.error);
+      .then(({ status }) => {
+        if (status === "EMAIL_VERIFIED") {
+          setSuccess(
+            dictionary["auth/new-verification"]["message:email-verified"]
+          );
+        }
       })
       .catch(() => {
-        setError(dictionary.auth["error:generic"]);
+        if (isAppError(error)) {
+          const code = error.message;
+          setError(dictionary.error[code]);
+        } else {
+          setError(dictionary.error.AUTH_UNK_ERR);
+        }
       });
   }, [token, success, error, dictionary]);
 

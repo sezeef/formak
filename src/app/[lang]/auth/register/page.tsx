@@ -1,10 +1,12 @@
 "use client";
 import { useState, useTransition } from "react";
-import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { localize } from "@/lib/locale";
+import { AppError, ERROR_CODES, isAppError } from "@/lib/error";
 import { register } from "@/actions/auth/register";
-import { RegisterSchema } from "@/lib/schemas";
+import { type RegisterSchema, registerSchema } from "@/lib/schemas";
 import { useDictionary } from "@/components/dictionary-context";
 
 import { AuthCard } from "@/components/auth-card";
@@ -20,7 +22,6 @@ import {
   FormLabel,
   FormMessage
 } from "@/components/ui/form";
-import { localize } from "@/lib/locale";
 
 export default function RegisterPage() {
   const { dictionary } = useDictionary();
@@ -28,8 +29,8 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
+  const form = useForm<RegisterSchema>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -37,15 +38,27 @@ export default function RegisterPage() {
     }
   });
 
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = (values: RegisterSchema) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      register(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
-      });
+      register(values)
+        .then(({ status }) => {
+          if (status === "CONFIRMATION_SENT") {
+            setSuccess(dictionary.auth["message:confirm-sent"]);
+          } else {
+            throw new AppError(ERROR_CODES.SYS_INTERNAL_ERR);
+          }
+        })
+        .catch((error) => {
+          if (isAppError(error)) {
+            const code = error.message;
+            setError(dictionary.error[code]);
+          } else {
+            setError(dictionary.error.AUTH_UNK_ERR);
+          }
+        });
     });
   };
 
