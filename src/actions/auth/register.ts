@@ -1,38 +1,42 @@
 "use server";
-import * as z from "zod";
 import bcrypt from "bcryptjs";
-import { db } from "@/db";
-import { userTable } from "@/db/schema/user";
-import { RegisterSchema } from "@/lib/schemas";
-import { getUserByEmail } from "@/db/query/user";
+import {
+  type RegisterSchema,
+  registerSchema,
+  unsafeValidate
+} from "@/lib/schemas";
+import { createUser, getUserByEmail } from "@/db/query/user";
 import { sendVerificationEmail } from "@/lib/email";
 import { generateVerificationToken } from "@/lib/tokens";
+import { AppError, ERROR_CODES } from "@/lib/error";
 
-export async function register(values: z.infer<typeof RegisterSchema>) {
-  const validatedFields = RegisterSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
-  }
-
-  const { email, password, name } = validatedFields.data;
+export async function register(values: RegisterSchema) {
+  const { email, password, name } = unsafeValidate(registerSchema, values);
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
-    return { error: "Email already in use!" };
+    throw new AppError(ERROR_CODES.AUTH_EXISTING_EMAIL);
   }
 
-  await db.insert(userTable).values({
+  const user = await createUser({
     name,
     email,
     password: hashedPassword
   });
 
+  if (!user) {
+    throw new AppError(ERROR_CODES.SYS_DB_FAILURE);
+  }
+
   const verificationToken = await generateVerificationToken(email);
+
+  if (!verificationToken) {
+    throw new AppError(ERROR_CODES.SYS_DB_FAILURE);
+  }
 
   await sendVerificationEmail(verificationToken.email, verificationToken.token);
 
-  return { success: "Confirmation email sent!" };
+  return { status: "CONFIRMATION_SENT" as const };
 }

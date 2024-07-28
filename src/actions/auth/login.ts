@@ -1,8 +1,18 @@
 "use server";
-import * as z from "zod";
 import { AuthError } from "next-auth";
+
 import { signIn } from "@/lib/auth";
-import { LoginSchema } from "@/lib/schemas";
+import { type LoginSchema, loginSchema } from "@/lib/schemas";
+import { AppError, ERROR_CODES } from "@/lib/error";
+import {
+  generateVerificationToken,
+  generateTwoFactorToken
+} from "@/lib/tokens";
+import { unsafeValidate } from "@/lib/schemas";
+import { sendVerificationEmail, sendTwoFactorTokenEmail } from "@/lib/email";
+import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
+
+import type { SelectUser } from "@/db/schema/user";
 import { getUserByEmail } from "@/db/query/user";
 import {
   createTwoFactorConfirmation,
@@ -10,21 +20,13 @@ import {
   deleteTwoFactorTokenById,
   getTwoFactorTokenByEmail
 } from "@/db/query/two-factor-token";
-import { sendVerificationEmail, sendTwoFactorTokenEmail } from "@/lib/email";
-import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
-import { AppError, ERROR_CODES } from "@/lib/error";
-import {
-  generateVerificationToken,
-  generateTwoFactorToken
-} from "@/lib/tokens";
 import { getTwoFactorConfirmationByUserId } from "@/db/query/two-factor-token";
-import type { SelectUser } from "@/db/schema/user";
 
 export async function login(
-  values: z.infer<typeof LoginSchema>,
+  values: LoginSchema,
   callbackUrl?: string | null
 ) {
-  const { email, password, code } = handleValidation(values);
+  const { email, password, code } = unsafeValidate(loginSchema, values);
   const user = await handleGetUser(email);
 
   if (!user.emailVerified) {
@@ -35,7 +37,7 @@ export async function login(
   if (generatedToken) return generatedToken;
 
   try {
-    await signIn("credentials", {
+    return await signIn("credentials", {
       email,
       password,
       redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT
@@ -66,16 +68,7 @@ async function handleEmailNotVerified(user: SelectUser) {
     throw new AppError(ERROR_CODES.SYS_EMAIL_SERVICE_ERR);
   }
 
-  return { messageCode: "message:success" };
-}
-
-function handleValidation(input: z.infer<typeof LoginSchema>) {
-  const validatedFields = LoginSchema.safeParse(input);
-  if (!validatedFields.success) {
-    throw new AppError(ERROR_CODES.VAL_INVALID_FIELD);
-  }
-
-  return validatedFields.data;
+  return { status: "VERIFICATION_SENT" as const };
 }
 
 async function handleGetUser(email: string): Promise<SelectUser> {
@@ -115,7 +108,7 @@ async function handle2faGeneration(user: SelectUser) {
   const twoFactorToken = await generateTwoFactorToken(user.email);
   await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
 
-  return { twoFactor: true };
+  return { status: "2FA_SENT" as const };
 }
 
 async function handle2fa(user: SelectUser, code?: string) {

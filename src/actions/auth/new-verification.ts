@@ -1,36 +1,36 @@
 "use server";
-import { eq } from "drizzle-orm";
-import { db } from "@/db";
-import { getUserByEmail } from "@/db/query/user";
-import { getVerificationTokenByToken } from "@/db/query/verification-token";
-import { userTable, verificationTokenTable } from "@/db/schema/user";
+import { getUserByEmail, updateUserVerifiedById } from "@/db/query/user";
+import { deleteVerificationTokenById, getVerificationTokenByToken } from "@/db/query/verification-token";
+import { AppError, ERROR_CODES } from "@/lib/error";
 
 export async function newVerification(token: string) {
   const existingToken = await getVerificationTokenByToken(token);
 
   if (!existingToken) {
-    return { error: "Token does not exist!" };
+    throw new AppError(ERROR_CODES.AUTH_INVALID_TOKEN);
   }
 
   const hasExpired = new Date(existingToken.expires) < new Date();
 
   if (hasExpired) {
-    return { error: "Token has expired!" };
+    throw new AppError(ERROR_CODES.AUTH_EXPIRED_TOKEN);
   }
 
   const existingUser = await getUserByEmail(existingToken.email);
 
   if (!existingUser) {
-    return { error: "Email does not exist!" };
+    throw new AppError(ERROR_CODES.AUTH_INVALID_EMAIL);
   }
 
-  await db
-    .update(userTable)
-    .set({ email: existingToken.email, emailVerified: new Date() })
-    .where(eq(userTable.id, existingUser.id));
-  await db
-    .delete(verificationTokenTable)
-    .where(eq(verificationTokenTable.id, existingToken.id));
+  const isUserUpdated = await updateUserVerifiedById({
+    id: existingUser.id,
+    email: existingToken.email
+  });
+  const isTokenDeleted = await deleteVerificationTokenById(existingToken.id);
 
-  return { success: "Email verified!" };
+  if (!isUserUpdated || ! isTokenDeleted) {
+    throw new AppError(ERROR_CODES.SYS_DB_FAILURE);
+  }
+
+  return { status: "EMAIL_VERIFIED" as const };
 }

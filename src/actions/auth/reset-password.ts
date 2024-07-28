@@ -1,30 +1,33 @@
 "use server";
-import * as z from "zod";
-import { ResetSchema } from "@/lib/schemas";
+import { type ResetSchema, resetSchema, unsafeValidate } from "@/lib/schemas";
 import { getUserByEmail } from "@/db/query/user";
 import { sendPasswordResetEmail } from "@/lib/email";
 import { generatePasswordResetToken } from "@/lib/tokens";
+import { AppError, ERROR_CODES } from "@/lib/error";
 
-export async function reset(values: z.infer<typeof ResetSchema>) {
-  const validatedFields = ResetSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return { error: "Invalid emaiL!" };
-  }
-
-  const { email } = validatedFields.data;
+export async function reset(values: ResetSchema) {
+  const { email } = unsafeValidate(resetSchema, values);
 
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser) {
-    return { error: "Email not found!" };
+    throw new AppError(ERROR_CODES.AUTH_INVALID_EMAIL);
   }
 
   const passwordResetToken = await generatePasswordResetToken(email);
-  await sendPasswordResetEmail(
+
+  if (!passwordResetToken) {
+    throw new AppError(ERROR_CODES.SYS_DB_FAILURE);
+  }
+
+  const res = await sendPasswordResetEmail(
     passwordResetToken.email,
     passwordResetToken.token
   );
 
-  return { success: "Reset email sent!" };
+  if (!res) {
+    throw new AppError(ERROR_CODES.SYS_EMAIL_SERVICE_ERR);
+  }
+
+  return { status: "REST_EMAIL_SENT" as const };
 }
