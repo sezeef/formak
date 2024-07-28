@@ -3,6 +3,10 @@ export const ERROR_CODES = {
   AUTH_INVALID_CRED: "AUTH_INVALID_CRED",
   AUTH_INVALID_CODE: "AUTH_INVALID_CODE",
   AUTH_EXPIRED_CODE: "AUTH_EXPIRED_CODE",
+  AUTH_INVALID_TOKEN: "AUTH_INVALID_TOKEN",
+  AUTH_EXPIRED_TOKEN: "AUTH_EXPIRED_TOKEN",
+  AUTH_EXISTING_EMAIL: "AUTH_EXISTING_EMAIL",
+  AUTH_INVALID_EMAIL: "AUTH_INVALID_EMAIL",
   NET_UNAUTHORIZED: "NET_UNAUTHORIZED",
   SYS_EMAIL_SERVICE_ERR: "SYS_EMAIL_SERVICE_ERR",
   SYS_DB_FAILURE: "SYS_DB_FAILURE",
@@ -26,4 +30,8 @@ export function isAppError(error: unknown): error is AppError {
     "message" in error &&
     Object.values(ERROR_CODES).includes(error.message as ErrorType)
   );
+}
+
+export function isErrorWithCode(error: unknown): error is { code: string } {
+  return typeof error === "object" && error !== null && "code" in error;
 }

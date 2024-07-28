@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { eq } from "drizzle-orm";
-import { db } from "@/db";
+import { _initDb, getDb } from "@/db";
 import authConfig from "@/lib/auth/auth.config";
 import { type UserRole, twoFactorConfirmationTable } from "@/db/schema/user";
 import { getUserById } from "@/db/query/user";
@@ -19,6 +19,7 @@ export const {
   },
   callbacks: {
     async signIn({ user }) {
+      const db = await getDb();
       if (!user || !user?.id) return false;
       const existingUser = await getUserById(user.id);
       if (!existingUser?.emailVerified) return false;
@@ -56,7 +57,7 @@ export const {
       return token;
     }
   },
-  adapter: DrizzleAdapter(db),
+  adapter: DrizzleAdapter(_initDb()),
   session: { strategy: "jwt" },
   ...authConfig
 });
