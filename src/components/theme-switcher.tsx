@@ -1,16 +1,16 @@
 "use client";
 import { useTheme } from "next-themes";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
-function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme();
+export function ThemeSwitcher() {
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const { theme, setTheme } = useTheme();
 
   if (!mounted) return null; // avoid rehydration errors
   return (
@@ -29,5 +29,3 @@ function ThemeSwitcher() {
     </Tabs>
   );
 }
-
-export default ThemeSwitcher;
