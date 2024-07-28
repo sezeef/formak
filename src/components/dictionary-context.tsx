@@ -1,7 +1,8 @@
 "use client";
-import React, { createContext, useContext } from "react";
+import { createContext, useContext } from "react";
 import type { Locale } from "@/lib/locale";
 import type { Dictionary } from "@/lib/get-dictionary";
+import { AppError, ERROR_CODES } from "@/lib/error";
 
 type DictionaryContextType = {
   dictionary: Dictionary;
@@ -15,7 +16,8 @@ const DictionaryContext = createContext<DictionaryContextType | undefined>(
 export const useDictionary = () => {
   const context = useContext(DictionaryContext);
   if (context === undefined) {
-    throw new Error("useDictionary must be used within a DictionaryProvider");
+    // useDictionary must be used within a DictionaryProvider
+    throw new AppError(ERROR_CODES.SYS_INTERNAL_ERR);
   }
   return context;
 };
