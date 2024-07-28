@@ -22,7 +22,7 @@ export default function ErrorPage({ error }: { error: Error }) {
       </h2>
       <Button asChild>
         <Link href={localize(dictionary.lang, "/dashboard")}>
-          {dictionary.builder["button:back-to-home"]}
+          {dictionary["/"]["button:back-to-home"]}
         </Link>
       </Button>
     </div>
