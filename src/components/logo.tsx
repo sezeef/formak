@@ -4,14 +4,12 @@ import Link from "next/link";
 
 export function Logo({ lang, title }: { lang: Locale; title: string }) {
   return (
-    <div className="flex gap-1 items-center">
+    <Link
+      href={localize(lang, "/")}
+      className="flex gap-1 items-center hover:cursor-pointer"
+    >
       <Image src="/images/Logo.svg" width={32} height={32} alt="Logo" />
-      <Link
-        href={localize(lang, "/")}
-        className="font-bold text-3xl hover:cursor-pointer"
-      >
-        {title}
-      </Link>
-    </div>
+      <div className="font-bold text-3xl">{title}</div>
+    </Link>
   );
 }
