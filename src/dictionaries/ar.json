@@ -32,6 +32,144 @@
     "dialog.input.label:description": "الوصف",
     "dialog.button:save": "حفظ"
   },
+  "submit": {
+    "error:form-not-found": "النموذج غير موجود",
+    "toast.title:error": "خطأ",
+    "toast.desc:form-error": "يرجى التحقق من الأخطاء في النموذج",
+    "toast.desc:generic-error": "حدث خطأ ما",
+    "message:thanks-for-submit": "شكرًا لتقديم النموذج، يمكنك إغلاق هذه الصفحة الآن.",
+    "button:submit": "إرسال"
+  },
+  "forms": {
+    "error:form-not-found": "النموذج غير موجود",
+    "toast.title:copied": "تم النسخ!",
+    "toast.desc:copied": "تم نسخ الرابط إلى الحافظة",
+    "button:share-link": "مشاركة الرابط",
+    "button:visit": "زيارة",
+    "table.head:submitted-at": "تم الإرسال في"
+  },
+  "builder": {
+    "error:form-not-found": "النموذج غير موجود",
+    "header:form-published": "تم نشر النموذج",
+    "header.sub:share-form-1": "شارك هذا النموذج",
+    "header.sub:share-form-2": "يمكن لأي شخص لديه الرابط عرض النموذج وتقديم الردود",
+    "toast.title:copied": "تم النسخ!",
+    "toast.desc:copied": "تم نسخ الرابط إلى الحافظة",
+    "button:copy-link": "نسخ الرابط",
+    "button:back-to-home": "العودة إلى الصفحة الرئيسية",
+    "button:form-details": "تفاصيل النموذج",
+    "button:publish": "نشر",
+    "header.label:form": "النموذج:",
+    "toast.title:publish-success": "نجاح",
+    "toast.desc:publish-success": "نموذجك متاح الآن للجمهور",
+    "toast.title:error": "خطأ",
+    "toast.desc:error": "حدث خطأ ما",
+    "dialog.title:publish-form": "هل أنت متأكد؟",
+    "dialog.desc:publish-form-1": "لا يمكن التراجع عن هذا الإجراء. بعد النشر لن تتمكن من تعديل هذا النموذج.",
+    "dialog.desc:publish-form-2": "بنشر هذا النموذج ستجعله متاحًا للجمهور وستتمكن من جمع الردود.",
+    "dialog.button:cancel": "إلغاء",
+    "dialog.button:proceed": "متابعة",
+    "button:preview": "معاينة",
+    "dialog.title:form-preview": "معاينة النموذج",
+    "dialog.desc:form-preview": "هكذا سيظهر نموذجك للمستخدمين",
+    "toast.title:success-save": "نجاح",
+    "toast.desc:success-save": "تم حفظ النموذج بنجاح",
+    "button:save": "حفظ",
+    "input.label:designer-drop-area": "أسقط هنا",
+    "button:designer": "انقر للحصول على الخصائص أو اسحب للتحريك",
+    "header:dnd-elements": "سحب وإفلات العناصر",
+    "header:layout-elements": "عناصر التخطيط",
+    "header:form-elements": "عناصر النموذج",
+    "header:element-props": "خصائص العنصر",
+    "drag-overlay:no-overlay": "لا يوجد تراكب سحب",
+    "drag-overlay:no-element": "العنصر غير موجود!"
+  },
+  "form-elements": {
+    "common": {
+      "props:input.label:label": "التسمية",
+      "props:input.desc:label-1": "تسمية الحقل.",
+      "props:input.desc:label-2": "سيتم عرضها فوق الحقل",
+      "props:input.label:placeholder": "النص التوضيحي",
+      "props:input.desc:placeholder": "النص التوضيحي للحقل",
+      "props:input.label:helper": "نص المساعدة",
+      "props:input.desc:helper-1": "نص المساعدة للحقل.",
+      "props:input.desc:helper-2": "سيتم عرضه أسفل الحقل",
+      "props:input.label:required": "مطلوب",
+      "props:input.desc:required-1": "نص المساعدة للحقل.",
+      "props:input.desc:required-2": "سيتم عرضه أسفل الحقل"
+    },
+    "checkbox": {
+      "extra:title": "حقل اختيار",
+      "extra:helper": "نص المساعدة",
+      "icon:label": "حقل اختيار"
+    },
+    "spacer": {
+      "icon:label": "حقل الفاصل",
+      "designer:label:label": "حقل الفاصل:",
+      "designer:label:pixel": "بكسل",
+      "props:input.label:height": "الارتفاع (بكسل):"
+    },
+    "separator": {
+      "icon:label": "حقل الفاصل",
+      "designer:label:label": "حقل الفاصل",
+      "props:no-props": "لا خصائص لهذا العنصر"
+    },
+    "title": {
+      "icon:label": "حقل العنوان",
+      "extra:title": "حقل العنوان",
+      "designer:label:label": "حقل العنوان",
+      "props:input.label:title": "العنوان"
+    },
+    "subtitle": {
+      "icon:label": "حقل العنوان الفرعي",
+      "extra:title": "حقل العنوان الفرعي",
+      "designer:label:label": "حقل العنوان الفرعي",
+      "props:input.label:title": "العنوان الفرعي"
+    },
+    "paragraph": {
+      "icon:label": "حقل الفقرة",
+      "extra:text": "النص هنا",
+      "designer:label:label": "حقل الفقرة",
+      "props:input.label:text": "النص"
+    },
+    "text": {
+      "icon:label": "حقل النص",
+      "extra:label": "حقل النص",
+      "extra:helper": "نص المساعدة",
+      "extra:placeholder": "القيمة هنا..."
+    },
+    "text-area": {
+      "icon:label": "حقل منطقة النص",
+      "extra:label": "حقل منطقة النص",
+      "extra:helper": "نص المساعدة",
+      "extra:placeholder": "القيمة هنا...",
+      "props:input.label:rows": "الصفوف"
+    },
+    "number": {
+      "icon:label": "حقل الرقم",
+      "extra:label": "حقل الرقم",
+      "extra:helper": "نص المساعدة"
+    },
+    "select": {
+      "icon:label": "حقل التحديد",
+      "extra:label": "حقل التحديد",
+      "extra:helper": "نص المساعدة",
+      "extra:placeholder": "القيمة هنا...",
+      "props:input.label:options": "الخيارات",
+      "props:input.desc:options-1": "نص المساعدة للحقل.",
+      "props:input.desc:options-2": "سيتم عرضه أسفل الحقل",
+      "props:button:add": "إضافة",
+      "props:button:save": "حفظ",
+      "props:toast.label:success": "نجاح",
+      "props:toast.desc:success": "تم حفظ الخصائص بنجاح"
+    },
+    "date": {
+      "icon:label": "حقل التاريخ",
+      "extra:label": "حقل التاريخ",
+      "extra:helper": "اختر تاريخ",
+      "designer:label:label": "اختر تاريخ"
+    }
+  },
   "auth": {
     "head:title": "فورمك أمان",
     "input.label:email": "البريد الإلكتروني",

@@ -32,6 +32,144 @@
     "dialog.input.label:description": "Discription",
     "dialog.button:save": "Save"
   },
+  "submit": {
+    "error:form-not-found": "Form not found",
+    "toast.title:error": "Error",
+    "toast.desc:form-error": "Please check the form for errors",
+    "toast.desc:generic-error": "Something went wrong",
+    "message:thanks-for-submit": "Thank you for submitting the form, you can close this page now.",
+    "button:submit": "Submit"
+  },
+  "forms": {
+    "error:form-not-found": "Form not found",
+    "toast.title:copied": "Copied!",
+    "toast.desc:copied": "Link copied to clipboard",
+    "button:share-link": "Share link",
+    "button:visit": "Visit",
+    "table.head:submitted-at": "Submitted at"
+  },
+  "builder": {
+    "error:form-not-found": "Form not found",
+    "header:form-published": "Form Published",
+    "header.sub:share-form-1": "Share this form",
+    "header.sub:share-form-2": "Anyone with the link can view and submit the form",
+    "toast.title:copied": "Copied!",
+    "toast.desc:copied": "Link copied to clipboard",
+    "button:copy-link": "Copy link",
+    "button:back-to-home": "Go back home",
+    "button:form-details": "Form details",
+    "button:publish": "Publish",
+    "header.label:form": "Form:",
+    "toast.title:publish-success": "Success",
+    "toast.desc:publish-success": "Your form is now available to the public",
+    "toast.title:error": "Error",
+    "toast.desc:error": "Something went wrong",
+    "dialog.title:publish-form": "Are you sure?",
+    "dialog.desc:publish-form-1": "This action cannot be undone. After publishing you will not be able to edit this form.",
+    "dialog.desc:publish-form-2": "By publishing this form you will make it available to the public and you will be able to collect submissions.",
+    "dialog.button:cancel": "Cancel",
+    "dialog.button:proceed": "Proceed",
+    "button:preview": "Preview",
+    "dialog.title:form-preview": "Form preview",
+    "dialog.desc:form-preview": "This is how your form will look like to form takers",
+    "toast.title:success-save": "Success",
+    "toast.desc:success-save": "Your form has been saved",
+    "button:save": "Save",
+    "input.label:designer-drop-area": "Drop here",
+    "button:designer": "Click for properties or drag to move",
+    "header:dnd-elements": "Drag and drop elements",
+    "header:layout-elements": "Layout elements",
+    "header:form-elements": "Form elements",
+    "header:element-props": "Element properties",
+    "drag-overlay:no-overlay": "No drag overlay",
+    "drag-overlay:no-element": "Element not found!"
+  },
+  "form-elements": {
+    "common": {
+      "props:input.label:label": "Label",
+      "props:input.desc:label-1": "The label of the field.",
+      "props:input.desc:label-2": "It will be displayed above the field",
+      "props:input.label:placeholder": "Placeholder",
+      "props:input.desc:placeholder": "The placeholder of the field",
+      "props:input.label:helper": "Helper text",
+      "props:input.desc:helper-1": "The helper text of the field.",
+      "props:input.desc:helper-2": "It will be displayed below the field",
+      "props:input.label:required": "Required",
+      "props:input.desc:required-1": "The helper text of the field.",
+      "props:input.desc:required-2": "It will be displayed below the field"
+    },
+    "checkbox": {
+      "extra:title": "Checkbox field",
+      "extra:helper": "Helper text",
+      "icon:label": "Checkbox Field"
+    },
+    "spacer": {
+      "icon:label": "Spacer Field",
+      "designer:label:label": "Spacer field:",
+      "designer:label:pixel": "px",
+      "props:input.label:height": "Height (px):"
+    },
+    "separator": {
+      "icon:label": "Separator Field",
+      "designer:label:label": "Separator field",
+      "props:no-props": "No properties for this element"
+    },
+    "title": {
+      "icon:label": "Title Field",
+      "extra:title": "Title field",
+      "designer:label:label": "Title field",
+      "props:input.label:title": "Title"
+    },
+    "subtitle": {
+      "icon:label": "Subtitle Field",
+      "extra:title": "Subtitle field",
+      "designer:label:label": "Subtitle field",
+      "props:input.label:title": "Subtitle"
+    },
+    "paragraph": {
+      "icon:label": "Paragraph Field",
+      "extra:text": "Text here",
+      "designer:label:label": "Paragraph field",
+      "props:input.label:text": "Text"
+    },
+    "text": {
+      "icon:label": "Text Field",
+      "extra:label": "Text field",
+      "extra:helper": "Helper text",
+      "extra:placeholder": "Value here..."
+    },
+    "text-area": {
+      "icon:label": "Text Area Field",
+      "extra:label": "Text area field",
+      "extra:helper": "Helper text",
+      "extra:placeholder": "Value here...",
+      "props:input.label:rows": "Rows"
+    },
+    "number": {
+      "icon:label": "Number Field",
+      "extra:label": "Number field",
+      "extra:helper": "Helper text"
+    },
+    "select": {
+      "icon:label": "Select Field",
+      "extra:label": "Select field",
+      "extra:helper": "Helper text",
+      "extra:placeholder": "Value here...",
+      "props:input.label:options": "Options",
+      "props:input.desc:options-1": "The helper text of the field.",
+      "props:input.desc:options-2": "It will be displayed below the field",
+      "props:button:add": "Add",
+      "props:button:save": "Save",
+      "props:toast.label:success": "Success",
+      "props:toast.desc:success": "Properties saved successfully"
+    },
+    "date": {
+      "icon:label": "Date Field",
+      "extra:label": "Date field",
+      "extra:helper": "Pick a date",
+      "designer:label:label": "Pick a date"
+    }
+  },
   "auth": {
     "head:title": "Formak Authenticator",
     "input.label:email": "Email",
