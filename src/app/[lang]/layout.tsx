@@ -4,6 +4,7 @@ import { i18n, type Locale } from "@/lib/locale";
 import { getDictionary } from "@/lib/get-dictionary";
 import { DictionaryProvider } from "@/components/dictionary-context";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Formak",
@@ -33,6 +34,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <Toaster />
           </ThemeProvider>
         </DictionaryProvider>
       </body>
