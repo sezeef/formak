@@ -1,7 +1,8 @@
 "use server";
-import { sql, desc } from "drizzle-orm";
+import { sql, eq, and, desc } from "drizzle-orm";
 import { getDb } from "@/db";
 import { formTable, type InsertForm } from "@/db/schema/form";
+import { formSubmissionTable } from "@/db/schema/form-submission";
 
 export async function createForm(data: InsertForm) {
   try {
@@ -44,4 +45,138 @@ export async function getFormStatsByUserId(userId: string) {
   } catch (error) {
     console.error("Failed to fetch form stats: ", error);
   }
+}
+
+export async function getFormById({
+  formId,
+  userId
+}: {
+  formId: string;
+  userId: string;
+}) {
+  try {
+    const db = await getDb();
+    return await db
+      .select()
+      .from(formTable)
+      .where(and(eq(formTable.id, formId), eq(formTable.userId, userId)))
+      .get();
+  } catch (error) {
+    console.error("Failed to fetch form: ", error);
+  }
+}
+
+export async function publishFormById({
+  formId,
+  userId
+}: {
+  formId: string;
+  userId: string;
+}) {
+  try {
+    const db = await getDb();
+    const res = await db
+      .update(formTable)
+      .set({ published: true })
+      .where(and(eq(formTable.userId, userId), eq(formTable.id, formId)));
+
+    return res.rowsAffected >= 1;
+  } catch (error) {
+    console.error("Failed to publish form: ", error);
+  }
+}
+
+export async function updateFormContentById({
+  formId,
+  userId,
+  content
+}: {
+  formId: string;
+  userId: string;
+  content: string;
+}) {
+  try {
+    const db = await getDb();
+    const res = await db
+      .update(formTable)
+      .set({ content })
+      .where(and(eq(formTable.userId, userId), eq(formTable.id, formId)));
+
+    return res.rowsAffected >= 1;
+  } catch (error) {
+    console.error("Failed to publish form: ", error);
+  }
+}
+
+export async function getFormWithSubmissionsById({
+  formId
+}: {
+  formId: string;
+}) {
+  try {
+    const db = await getDb();
+    const res = await db
+      .select({
+        form: formTable,
+        submissions: formSubmissionTable
+      })
+      .from(formTable)
+      .leftJoin(
+        formSubmissionTable,
+        eq(formTable.id, formSubmissionTable.formId)
+      )
+      .where(eq(formTable.id, formId));
+
+    if (res.length === 0) {
+      return;
+    }
+
+    const form = res[0].form;
+    const submissions = res.map((r) => r.submissions).filter((s) => s != null);
+
+    return {
+      ...form,
+      submissions
+    };
+  } catch (error) {
+    console.error("Failed to fetch form with submissions: ", error);
+  }
+}
+
+export async function updateFormAndCreateSubmission({
+  formUrl,
+  content
+}: {
+  formUrl: string;
+  content: string;
+}) {
+  const db = await getDb();
+  // First, update the form
+  const updatedForms = await db
+    .update(formTable)
+    .set({
+      submissions: sql`${formTable.submissions} + 1`
+    })
+    .where(and(eq(formTable.shareUrl, formUrl), eq(formTable.published, true)))
+    .returning();
+
+  if (updatedForms.length === 0) {
+    throw new Error("Form not found or not published");
+  }
+
+  const updatedForm = updatedForms[0];
+
+  // Then, create the new submission
+  const newSubmission = await db
+    .insert(formSubmissionTable)
+    .values({
+      formId: updatedForm.id,
+      content: content
+    })
+    .returning();
+
+  return {
+    ...updatedForm,
+    newSubmission: newSubmission[0]
+  };
 }
