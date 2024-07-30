@@ -61,10 +61,6 @@ export type FormElement = {
   }>;
 };
 
-// type FormElementsType = {
-//   [key in ElementsType]: FormElement;
-// };
-
 export const createFormElements = (
   dictionary: Dictionary
 ): Record<ElementsType, FormElement> => ({
