@@ -43,7 +43,10 @@ export async function login(values: LoginSchema, callbackUrl?: string | null) {
     if (error instanceof Error && error.message === "NEXT_REDIRECT") {
       // This is a redirect, not an error. Re-throw it.
       throw error;
-    } else if (error instanceof AuthError && error.type === "CredentialsSignin") {
+    } else if (
+      error instanceof AuthError &&
+      error.type === "CredentialsSignin"
+    ) {
       throw new AppError(ERROR_CODES.AUTH_INVALID_CRED);
     } else {
       throw new AppError(ERROR_CODES.AUTH_UNK_ERR);

@@ -58,7 +58,7 @@ export default function LoginPage() {
           if (status === "VERIFICATION_SENT") {
             form.reset();
             setSuccess(dictionary.auth["message:confirm-sent"]);
-          }else if (status === "2FA_SENT") {
+          } else if (status === "2FA_SENT") {
             setShowTwoFactor(true);
           } else {
             // should be unreachable
@@ -69,7 +69,7 @@ export default function LoginPage() {
           form.reset();
           if (error instanceof Error && error.message === "NEXT_REDIRECT") {
             console.log("caught here");
-            throw error
+            throw error;
           } else if (isAppError(error)) {
             const code = error.message;
             setError(dictionary.error[code]);

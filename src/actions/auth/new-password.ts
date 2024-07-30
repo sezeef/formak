@@ -5,21 +5,17 @@ import {
   newPasswordSchema,
   unsafeValidate
 } from "@/lib/schemas";
-import { 
+import {
   deleteResetPasswordTokenByTokenId,
   getPasswordResetTokenByToken
 } from "@/db/query/password-reset-token";
-import {
-  getUserByEmail,
-  updateUserPasswordById
-} from "@/db/query/user";
+import { getUserByEmail, updateUserPasswordById } from "@/db/query/user";
 import { AppError, ERROR_CODES } from "@/lib/error";
 
 export async function newPassword(
   values: NewPasswordSchema,
   token?: string | null
 ) {
-
   if (!token) {
     throw new AppError(ERROR_CODES.AUTH_INVALID_TOKEN);
   }

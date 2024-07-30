@@ -3,10 +3,7 @@ import { Suspense } from "react";
 import type { Locale } from "@/lib/locale";
 import { getDictionary } from "@/lib/get-dictionary";
 
-import {
-  StatCardsWrapper,
-  StatCards
-} from "@/components/dashboard/stat-cards";
+import { StatCardsWrapper, StatCards } from "@/components/dashboard/stat-cards";
 import { FormCards, FormCardSkeleton } from "@/components/dashboard/form-cards";
 import { CreateFormButton } from "@/components/dashboard/create-form-button";
 
@@ -20,9 +17,7 @@ export default async function BuilderPage({
   const dictionary = await getDictionary(lang);
   return (
     <div className="container pt-4">
-      <Suspense
-        fallback={<StatCards loading={true} dictionary={dictionary} />}
-      >
+      <Suspense fallback={<StatCards loading={true} dictionary={dictionary} />}>
         <StatCardsWrapper dictionary={dictionary} />
       </Suspense>
       <Separator className="my-6" />

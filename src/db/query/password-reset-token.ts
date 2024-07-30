@@ -33,8 +33,8 @@ export async function deleteResetPasswordTokenByTokenId(tokenId: string) {
   try {
     const db = await getDb();
     return await db
-    .delete(passwordResetTokenTable)
-    .where(eq(passwordResetTokenTable.id, tokenId));
+      .delete(passwordResetTokenTable)
+      .where(eq(passwordResetTokenTable.id, tokenId));
   } catch (error) {
     console.error("Failed to delete reset password token: ", error);
   }

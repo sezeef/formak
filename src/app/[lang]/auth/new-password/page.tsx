@@ -47,7 +47,9 @@ export default function NewPasswordPage() {
       newPassword(values, token)
         .then(({ status }) => {
           if (status === "PASSWORD_RESET") {
-            setSuccess(dictionary["auth/new-password"]["message:reset-success"]);
+            setSuccess(
+              dictionary["auth/new-password"]["message:reset-success"]
+            );
           } else {
             // should be unreachable
             throw new AppError(ERROR_CODES.SYS_INTERNAL_ERR);

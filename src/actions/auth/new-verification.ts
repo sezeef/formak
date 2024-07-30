@@ -1,6 +1,9 @@
 "use server";
 import { getUserByEmail, updateUserVerifiedById } from "@/db/query/user";
-import { deleteVerificationTokenById, getVerificationTokenByToken } from "@/db/query/verification-token";
+import {
+  deleteVerificationTokenById,
+  getVerificationTokenByToken
+} from "@/db/query/verification-token";
 import { AppError, ERROR_CODES } from "@/lib/error";
 
 export async function newVerification(token: string) {
@@ -28,7 +31,7 @@ export async function newVerification(token: string) {
   });
   const isTokenDeleted = await deleteVerificationTokenById(existingToken.id);
 
-  if (!isUserUpdated || ! isTokenDeleted) {
+  if (!isUserUpdated || !isTokenDeleted) {
     throw new AppError(ERROR_CODES.SYS_DB_FAILURE);
   }
 
