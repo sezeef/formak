@@ -19,9 +19,7 @@ export default async function SubmitPage({
     throw new Error(dictionary.submit["error:form-not-found"]);
   }
 
-  const formContent = form?.content
-    ? (JSON.parse(form.content) as FormElementInstance[])
-    : [];
+  const formContent = JSON.parse(form.content) as FormElementInstance[];
 
   return <FormSubmit formUrl={formUrl} content={formContent} />;
 }
