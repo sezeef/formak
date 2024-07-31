@@ -6,7 +6,7 @@ import {
   DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
   authRoutes,
-  publicRoutes
+  isPublicRoute as isPublicRouteFn
 } from "@/lib/routes";
 
 const { auth } = NextAuth(authConfig);
@@ -24,7 +24,7 @@ export function withAuthMiddleware(
 
     const isLoggedIn = authResult?.user != null ? true : false;
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-    const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+    const isPublicRoute = isPublicRouteFn(nextUrl.pathname);
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
     if (isApiAuthRoute) {
