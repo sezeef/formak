@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
-export function ThemeSwitcher() {
+export function ThemeSwitcher({ className }: { className?: string }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -14,7 +14,7 @@ export function ThemeSwitcher() {
 
   if (!mounted) return null; // avoid rehydration errors
   return (
-    <Tabs defaultValue={theme}>
+    <Tabs defaultValue={theme} className={className}>
       <TabsList className="border">
         <TabsTrigger value="light" onClick={() => setTheme("light")}>
           <SunIcon className="h-[1.2rem] w-[1.2rem]" />

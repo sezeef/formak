@@ -12,8 +12,9 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { useDictionary } from "./dictionary-context";
+import { cn } from "@/lib/utils";
 
-export function LangSwitcher() {
+export function LangSwitcher({ className }: { className?: string }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -37,7 +38,12 @@ export function LangSwitcher() {
   if (!mounted) return null; // avoid rehydration errors
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="h-9 w-16 rounded-lg bg-muted border flex justify-center items-center">
+      <DropdownMenuTrigger
+        className={cn(
+          "h-9 w-16 rounded-lg bg-muted border flex justify-center items-center",
+          className
+        )}
+      >
         <div className="h-7 w-12 rounded-md flex justify-center items-center bg-background ">
           <div className="flex justify-between gap-1 items-baseline">
             <Image
