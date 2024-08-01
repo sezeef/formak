@@ -5,6 +5,24 @@ import { getDictionary } from "@/lib/get-dictionary";
 import { DictionaryProvider } from "@/components/dictionary-context";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { Roboto, Roboto_Slab } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { Navbar } from "@/components/navbar";
+
+const roboto = Roboto({
+  weight: ["300", "400", "500", "700", "900"],
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-roboto"
+});
+
+const roboto_slab = Roboto_Slab({
+  weight: ["300", "400", "500", "700", "900"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto-slab"
+});
 
 export const metadata: Metadata = {
   title: "Formak",
@@ -24,8 +42,13 @@ export default async function RootLayout({
 }>) {
   const dictionary = await getDictionary(lang);
   return (
-    <html lang={lang} dir={dictionary.dir}>
-      <body className="bg-background">
+    <html
+      lang={lang}
+      dir={dictionary.dir}
+      className={`${roboto.variable} ${roboto_slab.variable}`}
+      suppressHydrationWarning
+    >
+      <body className={cn("bg-background font-roboto")}>
         <DictionaryProvider dictionary={dictionary} locale={lang}>
           <ThemeProvider
             attribute="class"
@@ -33,6 +56,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Navbar dictionary={dictionary} />
             {children}
             <Toaster />
           </ThemeProvider>
