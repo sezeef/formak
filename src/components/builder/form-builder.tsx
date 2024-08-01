@@ -77,7 +77,7 @@ function PublishedView({
       <div className="flex flex-col items-center justify-center h-full w-full">
         <div className="max-w-lg">
           <h1 className="text-center text-4xl font-bold text-primary border-b pb-2 mb-10">
-            🎊🎊{" "}{dictionary.builder["header:form-published"]}{" "}🎊🎊
+            🎊🎊 {dictionary.builder["header:form-published"]} 🎊🎊
           </h1>
           <h2 className="text-2xl">
             {dictionary.builder["header.sub:share-form-1"]}
