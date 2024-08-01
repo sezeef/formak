@@ -9,7 +9,7 @@ export function Logo({ lang, title }: { lang: Locale; title: string }) {
       className="flex gap-1 items-center hover:cursor-pointer"
     >
       <Image src="/images/Logo.svg" width={32} height={32} alt="Logo" />
-      <div className="font-bold text-3xl">{title}</div>
+      <div className="font-robotoSlab font-medium text-3xl">{title}</div>
     </Link>
   );
 }
