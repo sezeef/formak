@@ -1,6 +1,8 @@
 import Image from "next/image";
-import type { Locale } from "@/lib/locale";
+import { localize, type Locale } from "@/lib/locale";
 import { getDictionary } from "@/lib/get-dictionary";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function HomePage({
   params: { lang }
@@ -23,6 +25,11 @@ export default async function HomePage({
           {dictionary["/"]["header:hero-subtitle-2"]}
         </p>
         {/* TODO: CTA */}
+        <Link href={localize(lang, "/dashboard")}>
+          <Button size="lg" className="gap-2 text-white text-lg bg-gradient-to-r from-indigo-400 to-cyan-400">
+            {dictionary["/"]["button:get-started"]}
+          </Button>
+        </Link>
         <div className="w-full h-24 bg-gradient-to-b from-transparent to-background"></div>
       </section>
       <section

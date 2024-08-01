@@ -12,6 +12,7 @@
     "button:theme:light": "Light",
     "button:theme:dark": "Dark",
     "button:theme:system": "System",
+    "button:get-started": "Get started",
     "header:hero-title": "Form Building, Simplified",
     "header:hero-subtitle-1": "Drag, Drop, and Done",
     "header:hero-subtitle-2": "Build, Customize, and Launch in Minutes",
