@@ -7,9 +7,7 @@ export default function AuthLayout({
 }) {
   return (
     <Suspense>
-      <div className="h-screen flex items-center justify-center">
-        {children}
-      </div>
+      <div className="mt-16 flex justify-center">{children}</div>
     </Suspense>
   );
 }
