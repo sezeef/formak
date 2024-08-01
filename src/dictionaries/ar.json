@@ -4,7 +4,26 @@
   "/": {
     "body:welcome": "مرحبًا",
     "site:name": "فورمك",
-    "button:back-to-home": "العودة إلى الصفحة الرئيسية"
+    "button:back-to-home": "العودة إلى الصفحة الرئيسية",
+    "button:login": "تسجيل الدخول",
+    "button:logout": "تسجيل الخروج",
+    "button:language": "اللغة",
+    "button:theme": "الثيم",
+    "button:theme:light": "فاتح",
+    "button:theme:dark": "داكن",
+    "button:theme:system": "النظام",
+    "header:hero-title": "بناء النماذج بسهولة",
+    "header:hero-subtitle-1": "اسحب، أفلت، وتم",
+    "header:hero-subtitle-2": "ابنِ، خصص، واطلق في دقائق",
+    "header:how-it-works": "كيف يعمل",
+    "image.alt:create-form": "إنشاء نموذج",
+    "card.desc:create-form": "1. أنشئ النموذج بنقرة واحدة",
+    "image.alt:add-elements": "إضافة عناصر إلى النموذج",
+    "card.desc:add-elements": "2. أضف عناصر إلى نموذجك عن طريق السحب والإفلات",
+    "image.alt:configure-form": "تهيئة عناصر النموذج",
+    "card.desc:configure-form": "3. هيئ عناصر النموذج حسب رغبتك",
+    "image.alt:publish-form": "نشر النموذج",
+    "card.desc:publish-form": "4. انشر نموذجك فورًا بسهولة"
   },
   "dashboard": {
     "header:title": "نماذجك",
