@@ -18,9 +18,7 @@ export const staticPublicRoutes = localizeRoutes(locales, [
  * This is an array of regex patterns of allowed dynamic routes
  * The pattern `[^/]+` mean match anything except a `/` character
  */
-const dynamicPublicRoutes = [
-  createLocaleRoutePattern("/submit/[^/]+")
-];
+const dynamicPublicRoutes = [createLocaleRoutePattern("/submit/[^/]+")];
 
 /**
  * An array of routes that are used for authentication

@@ -27,10 +27,7 @@ export default async function HomePage({
           </p>
         </div>
         <div className="w-full h-52 relative flex justify-center items-center">
-          <Link
-            href={localize(lang, "/dashboard")}
-            className="z-10"
-          >
+          <Link href={localize(lang, "/dashboard")} className="z-10">
             <Button
               size="lg"
               className="gap-2 text-white text-lg bg-gradient-to-r from-indigo-400 to-cyan-400"
