@@ -4,8 +4,8 @@ export default async function FormsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-screen min-w-full bg-background max-h-screen">
-      <main className="flex w-full flex-col flex-grow mx-auto">{children}</main>
-    </div>
+    <main className="flex flex-col w-full h-[calc(100vh-60px)]">
+      {children}
+    </main>
   );
 }

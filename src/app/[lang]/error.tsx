@@ -14,7 +14,7 @@ export default function ErrorPage({ error }: { error: Error }) {
   }, [error]);
 
   return (
-    <div className="flex w-full h-full flex-col items-center justify-center gap-4">
+    <div className="flex w-full h-[calc(100vh-60px)] flex-col items-center justify-center gap-4">
       <h2 className="text-destructive text-4xl">
         {isAppError(error)
           ? dictionary.error[error.message]

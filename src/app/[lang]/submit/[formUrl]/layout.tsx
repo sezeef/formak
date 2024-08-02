@@ -3,9 +3,5 @@ export default async function SubmitLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="flex flex-col min-w-full bg-background">
-      <main className="flex w-full flex-grow">{children}</main>
-    </div>
-  );
+  return <main className="w-full h-[calc(100vh-60px)]">{children}</main>;
 }
