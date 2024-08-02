@@ -7,6 +7,7 @@
     "button:back-to-home": "Go back home",
     "button:login": "Login",
     "button:logout": "Logout",
+    "button:dashboard": "Dashboard",
     "button:language": "Language",
     "button:theme": "Theme",
     "button:theme:light": "Light",

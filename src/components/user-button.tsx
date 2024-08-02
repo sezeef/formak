@@ -18,6 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenuSub } from "@radix-ui/react-dropdown-menu";
 import { ThemeSubmenu } from "./theme-submenu";
 import { LangSubmenu } from "./lang-submenu";
+import { localize } from "@/lib/locale";
 
 export async function UserButton({ dictionary }: { dictionary: Dictionary }) {
   const user = await safeGetUser();
@@ -53,6 +54,12 @@ export async function UserButton({ dictionary }: { dictionary: Dictionary }) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href={localize(dictionary.lang, "/dashboard")}>
+            {dictionary["/"]["button:dashboard"]}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             {dictionary["/"]["button:language"]}
@@ -70,11 +77,10 @@ export async function UserButton({ dictionary }: { dictionary: Dictionary }) {
           </DropdownMenuPortal>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem asChild>
           <form action={logout}>
             <input type="submit" value={dictionary["/"]["button:logout"]} />
           </form>
-          {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
