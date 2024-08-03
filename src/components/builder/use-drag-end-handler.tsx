@@ -110,12 +110,10 @@ function handleNewElementDrop(
   addElement: (index: number, element: FormElementInstance) => void,
   formElements: Record<ElementsType, FormElement>
 ) {
-  console.log({ formElements });
   if (!draggedElement.type) throw new Error("Element type is undefined");
   const newElement = formElements[draggedElement.type].construct(
     crypto.randomUUID()
   );
-  console.log({ formElements, newElement });
   const dropIndex = getDropIndex(dropTarget, elements);
   addElement(dropIndex, newElement);
 }

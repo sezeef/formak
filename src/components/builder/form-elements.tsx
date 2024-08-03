@@ -14,14 +14,14 @@ import { createSelectFieldElement } from "@/components/builder/fields/select-fie
 import { createDateFieldElement } from "@/components/builder/fields/date-field";
 
 export type ElementsType =
-  | "TextField"
   | "TitleField"
   | "SubTitleField"
   | "ParagraphField"
   | "SeparatorField"
   | "SpacerField"
-  | "NumberField"
+  | "TextField"
   | "TextAreaField"
+  | "NumberField"
   | "DateField"
   | "SelectField"
   | "CheckboxField";
