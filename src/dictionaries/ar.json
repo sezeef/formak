@@ -62,6 +62,7 @@
     "button:submit": "إرسال"
   },
   "forms": {
+    "header:submissions": "الإرسالات",
     "error:form-not-found": "النموذج غير موجود",
     "toast.title:copied": "تم النسخ!",
     "toast.desc:copied": "تم نسخ الرابط إلى الحافظة",

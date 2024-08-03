@@ -62,6 +62,7 @@
     "button:submit": "Submit"
   },
   "forms": {
+    "header:submissions": "Submissions",
     "error:form-not-found": "Form not found",
     "toast.title:copied": "Copied!",
     "toast.desc:copied": "Link copied to clipboard",

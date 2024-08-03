@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useDictionary } from "./dictionary-context";
+import { useDictionary } from "@/components/dictionary-context";
 
 export function VisitButton({ shareUrl }: { shareUrl: string }) {
   const { dictionary } = useDictionary();
