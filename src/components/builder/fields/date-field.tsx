@@ -8,7 +8,7 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { BsFillCalendarDateFill } from "react-icons/bs";
 
 import { cn } from "@/lib/utils";
-import { useDesigner } from "@/components/builder//use-designer";
+import { useDesigner } from "@/components/builder/use-designer";
 import { useDictionary } from "@/components/dictionary-context";
 import type { Dictionary } from "@/lib/get-dictionary";
 import type {
