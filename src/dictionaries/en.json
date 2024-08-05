@@ -68,7 +68,12 @@
     "toast.desc:copied": "Link copied to clipboard",
     "button:share-link": "Share link",
     "button:visit": "Visit",
-    "table.head:submitted-at": "Submitted at"
+    "table.head:submitted-at": "Submitted at",
+    "button:export": "Export",
+    "toast.title:downloading": "Downloading...",
+    "toast.desc:downloading": "File has started downloading",
+    "toast.title:download-failure": "Oops",
+    "toast.desc:download-failure": "Something went wrong while exporting data...\nPlease try again later."
   },
   "builder": {
     "error:form-not-found": "Form not found",

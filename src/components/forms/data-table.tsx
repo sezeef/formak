@@ -9,6 +9,7 @@ import type {
   ElementsType,
   FormElementInstance
 } from "@/components/builder/form-elements";
+import { ExportButton } from "@/components/forms/export-button";
 
 import {
   Table,
@@ -21,7 +22,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
-// TODO: change this
 type SubmissionRow = { [key: string]: string } & {
   submittedAt: Date;
 };
@@ -82,9 +82,12 @@ export async function SubmissionsDataTable({
 
   return (
     <div className="container pt-10">
+      <div className="flex justify-between items-center">
       <h1 className="text-2xl font-bold my-4">
         {dictionary.forms["header:submissions"]}
       </h1>
+      <ExportButton formId={formId} />
+      </div>
       <div className="rounded-md border mb-10">
         <Table>
           <TableHeader>

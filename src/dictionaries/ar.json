@@ -68,7 +68,12 @@
     "toast.desc:copied": "تم نسخ الرابط إلى الحافظة",
     "button:share-link": "مشاركة الرابط",
     "button:visit": "زيارة",
-    "table.head:submitted-at": "تم الإرسال في"
+    "table.head:submitted-at": "تم الإرسال في",
+    "button:export": "تصدير",
+    "toast.title:downloading": "جاري التنزيل...",
+    "toast.desc:downloading": "بدأ تنزيل الملف",
+    "toast.title:download-failure": "عذرًا",
+    "toast.desc:download-failure": "حدث خطأ أثناء تصدير البيانات...\nيرجى المحاولة مرة أخرى لاحقًا."
   },
   "builder": {
     "error:form-not-found": "النموذج غير موجود",
