@@ -8,6 +8,7 @@ import { FormCards, FormCardSkeleton } from "@/components/dashboard/form-cards";
 import { CreateFormButton } from "@/components/dashboard/create-form-button";
 
 import { Separator } from "@/components/ui/separator";
+import { CreateFormButtonWrapper } from "@/components/dashboard/create-form-button-wrapper";
 
 export default async function BuilderPage({
   params: { lang }
@@ -26,7 +27,9 @@ export default async function BuilderPage({
       </h2>
       <Separator className="my-6" />
       <div className="grid gric-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <CreateFormButton />
+        <CreateFormButtonWrapper>
+          <CreateFormButton dictionary={dictionary} />
+        </CreateFormButtonWrapper>
         <Suspense
           fallback={[1, 2].map((el) => (
             <FormCardSkeleton key={el} />

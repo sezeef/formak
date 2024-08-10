@@ -1,8 +1,11 @@
 import Image from "next/image";
-import { localize, type Locale } from "@/lib/locale";
+import { BsFileEarmarkPlus } from "react-icons/bs";
+
+import { type Locale } from "@/lib/locale";
 import { getDictionary } from "@/lib/get-dictionary";
+
+import { CreateFormButtonWrapper } from "@/components/dashboard/create-form-button-wrapper";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export default async function HomePage({
   params: { lang }
@@ -26,15 +29,26 @@ export default async function HomePage({
             {dictionary["/"]["header:hero-subtitle-2"]}
           </p>
         </div>
-        <div className="w-full h-52 relative flex justify-center items-center">
-          <Link href={localize(lang, "/dashboard")} className="z-10">
-            <Button
-              size="lg"
-              className="gap-2 text-white text-lg bg-gradient-to-r from-indigo-400 to-cyan-400"
-            >
-              {dictionary["/"]["button:get-started"]}
+        <div className="w-full h-52 relative flex flex-col justify-center items-center gap-2">
+          <div className="font-robotoSlab text-xl text-foreground">
+            {dictionary["/"]["header:start-now"]}
+          </div>
+          <CreateFormButtonWrapper>
+            <Button className="z-10 w-52 h-12 gap-2 text-white bg-gradient-to-r from-indigo-400 to-cyan-400">
+              <BsFileEarmarkPlus className="h-6 w-6" />
+              <p className="font-bold text-xl ">
+                {dictionary.dashboard["dialog.title:create-form"]}
+              </p>
             </Button>
-          </Link>
+          </CreateFormButtonWrapper>
+          {/* <Link href={localize(lang, "/dashboard")} className="z-10"> */}
+          {/* <Button */}
+          {/*   size="lg" */}
+          {/*   className="gap-2 text-white text-lg bg-gradient-to-r from-indigo-400 to-cyan-400" */}
+          {/* > */}
+          {/*   {dictionary["/"]["button:get-started"]} */}
+          {/* </Button> */}
+          {/* </Link> */}
           <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-b from-transparent to-background" />
         </div>
       </section>

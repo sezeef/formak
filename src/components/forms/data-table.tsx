@@ -83,10 +83,10 @@ export async function SubmissionsDataTable({
   return (
     <div className="container pt-10">
       <div className="flex justify-between items-center">
-      <h1 className="text-2xl font-bold my-4">
-        {dictionary.forms["header:submissions"]}
-      </h1>
-      <ExportButton formId={formId} />
+        <h1 className="text-2xl font-bold my-4">
+          {dictionary.forms["header:submissions"]}
+        </h1>
+        <ExportButton formId={formId} />
       </div>
       <div className="rounded-md border mb-10">
         <Table>

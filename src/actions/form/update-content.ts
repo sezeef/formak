@@ -1,10 +1,10 @@
 "use server";
 import { updateFormContentById } from "@/db/query/form";
 import { AppError, ERROR_CODES } from "@/lib/error";
-import { unsafeGetUser } from "@/lib/user";
+import { unsafeGetUserOrGuest } from "@/lib/user";
 
 export async function updateContent(id: string, content: string) {
-  const user = await unsafeGetUser();
+  const user = await unsafeGetUserOrGuest();
 
   const result = await updateFormContentById({
     userId: user.id,

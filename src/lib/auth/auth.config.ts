@@ -9,19 +9,17 @@ export default {
     Credentials({
       async authorize(credentials) {
         const validatedFields = loginSchema.safeParse(credentials);
+        if (!validatedFields.success) return null;
 
-        if (validatedFields.success) {
-          const { email, password } = validatedFields.data;
+        const { email, password } = validatedFields.data;
 
-          const user = await getUserByEmail(email);
-          if (!user || !user.password) return null;
+        const user = await getUserByEmail(email);
+        if (!user || !user.password) return null;
 
-          const passwordsMatch = await bcrypt.compare(password, user.password);
+        const passwordsMatch = await bcrypt.compare(password, user.password);
+        if (!passwordsMatch) return null;
 
-          if (passwordsMatch) return user;
-        }
-
-        return null;
+        return user;
       }
     })
   ]

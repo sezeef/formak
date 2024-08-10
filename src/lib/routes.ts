@@ -20,6 +20,10 @@ export const staticPublicRoutes = localizeRoutes(locales, [
  */
 const dynamicPublicRoutes = [createLocaleRoutePattern("/submit/[^/]+")];
 
+const dynamicGuestWhitelistRoutes = [
+  createLocaleRoutePattern("/builder/[^/]+")
+];
+
 /**
  * An array of routes that are used for authentication
  * These routes will redirect logged in users to /settings
@@ -62,6 +66,17 @@ function isDynamicPublicRoute(pathname: string): boolean {
   return false;
 }
 
+function isDynamicGuestWhitelistRoute(pathname: string): boolean {
+  for (const pattern of dynamicGuestWhitelistRoutes) {
+    if (pattern.test(pathname)) return true;
+  }
+  return false;
+}
+
 export function isPublicRoute(pathname: string): boolean {
   return isStaticPublicRoute(pathname) || isDynamicPublicRoute(pathname);
+}
+
+export function isGuestWhitelistRoute(pathname: string): boolean {
+  return isDynamicGuestWhitelistRoute(pathname);
 }

@@ -3,9 +3,14 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { eq } from "drizzle-orm";
 import { _initDb, getDb } from "@/db";
 import authConfig from "@/lib/auth/auth.config";
-import { type UserRole, twoFactorConfirmationTable } from "@/db/schema/user";
-import { getUserById } from "@/db/query/user";
+import {
+  USER_ROLES,
+  type UserRole,
+  twoFactorConfirmationTable
+} from "@/db/schema/user";
+import { getUserById, transferGuestDataToExistingUser } from "@/db/query/user";
 import { getTwoFactorConfirmationByUserId } from "@/db/query/two-factor-token";
+import { safeGetUserOrGuest } from "@/lib/user";
 
 export const {
   handlers: { GET, POST },
@@ -19,17 +24,43 @@ export const {
   },
   callbacks: {
     async signIn({ user }) {
-      const db = await getDb();
       if (!user || !user?.id) return false;
+
+      const db = await getDb();
       const existingUser = await getUserById(user.id);
-      if (!existingUser?.emailVerified) return false;
+      const loggedInUser = await safeGetUserOrGuest();
+      let guest;
+      if (loggedInUser && loggedInUser.role === USER_ROLES.GUEST) {
+        guest = loggedInUser;
+      }
+
+      if (!existingUser) return false;
+
+      // if guest user
+      // skip email verification checks
+      // skip 2 factor confirmation checks
+      if (existingUser.role === USER_ROLES.GUEST) return true;
+
+      // hardline no logins without verified email
+      if (!existingUser.emailVerified) return false;
+
       const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
         existingUser.id
       );
+
       if (!twoFactorConfirmation) return false;
+
       await db
         .delete(twoFactorConfirmationTable)
         .where(eq(twoFactorConfirmationTable.id, twoFactorConfirmation.id));
+
+      if (guest) {
+        await transferGuestDataToExistingUser({
+          guestId: guest.id,
+          userId: user.id
+        });
+      }
+
       return true;
     },
     async session({ token, session }) {
@@ -45,15 +76,21 @@ export const {
       }
       return session;
     },
-    async jwt({ token }) {
-      if (!token.sub) return token;
-      const existingUser = await getUserById(token.sub);
+    async jwt({ token, user }) {
+      // return early if this is not triggered by a signIn
+      // or signUp event (token creation)
+      // or if token.sub (userId) is not present
+      if (!user || !token.sub) return token;
 
+      // only happens on token creation to augment data on jwt
+      const existingUser = await getUserById(token.sub);
       if (!existingUser) return token;
 
       token.name = existingUser.name;
       token.email = existingUser.email;
       token.role = existingUser.role;
+      delete token.image;
+
       return token;
     }
   },

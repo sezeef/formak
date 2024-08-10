@@ -1,5 +1,5 @@
 "use server";
-import { AuthError } from "next-auth";
+import { CredentialsSignin } from "next-auth";
 
 import { signIn } from "@/lib/auth";
 import { type LoginSchema, loginSchema } from "@/lib/schemas";
@@ -12,8 +12,10 @@ import { unsafeValidate } from "@/lib/schemas";
 import { sendVerificationEmail, sendTwoFactorTokenEmail } from "@/lib/email";
 import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
 
-import type { SelectUser } from "@/db/schema/user";
-import { getUserByEmail } from "@/db/query/user";
+import { type SelectUser } from "@/db/schema/user";
+import {
+  getUserByEmail,
+} from "@/db/query/user";
 import {
   createTwoFactorConfirmation,
   deleteTwoFactorConfirmationById,
@@ -39,14 +41,12 @@ export async function login(values: LoginSchema, callbackUrl?: string | null) {
       password,
       redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT
     });
+
   } catch (error) {
     if (error instanceof Error && error.message === "NEXT_REDIRECT") {
       // This is a redirect, not an error. Re-throw it.
       throw error;
-    } else if (
-      error instanceof AuthError &&
-      error.type === "CredentialsSignin"
-    ) {
+    } else if (error instanceof CredentialsSignin) {
       throw new AppError(ERROR_CODES.AUTH_INVALID_CRED);
     } else {
       throw new AppError(ERROR_CODES.AUTH_UNK_ERR);

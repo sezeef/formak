@@ -10,7 +10,8 @@ import { formTable } from "@/db/schema/form";
 export const USER_ROLES = {
   ADMIN: "ADMIN",
   DEV: "DEV",
-  USER: "USER"
+  USER: "USER",
+  GUEST: "GUEST"
 } as const;
 
 export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
@@ -18,7 +19,8 @@ export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
 export const userRoles = [
   USER_ROLES.ADMIN,
   USER_ROLES.DEV,
-  USER_ROLES.USER
+  USER_ROLES.USER,
+  USER_ROLES.GUEST
 ] as const;
 
 export const userTable = sqliteTable("user", {
