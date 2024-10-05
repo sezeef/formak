@@ -27,7 +27,7 @@ export function SaveFormButton({
         title: dictionary.builder["toast.title:success-save"],
         description: dictionary.builder["toast.desc:success-save"]
       });
-    } catch (error) {
+    } catch {
       toast({
         title: dictionary.builder["toast.title:error"],
         description: dictionary.builder["toast.desc:error"],

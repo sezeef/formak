@@ -42,7 +42,7 @@ export function PublishFormButton({
         description: dictionary.builder["toast.desc:publish-success"]
       });
       router.refresh();
-    } catch (error) {
+    } catch {
       toast({
         title: dictionary.builder["toast.title:error"],
         description: dictionary.builder["toast.desc:error"]

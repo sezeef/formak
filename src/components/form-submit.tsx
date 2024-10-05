@@ -67,7 +67,7 @@ export function FormSubmit({
       const jsonContent = JSON.stringify(formValues.current);
       await submit(formUrl, jsonContent);
       setSubmitted(true);
-    } catch (error) {
+    } catch {
       toast({
         title: dictionary.submit["toast.title:error"],
         description: dictionary.submit["toast.desc:generic-error"],

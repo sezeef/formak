@@ -30,7 +30,7 @@ export function ExportButton({ formId }: { formId: string }) {
             title: dictionary.forms["toast.title:downloading"],
             description: dictionary.forms["toast.desc:downloading"]
           });
-        } catch (error) {
+        } catch {
           toast({
             title: dictionary.forms["toast.title:download-failure"],
             description: dictionary.forms["toast.desc:download-failure"],
