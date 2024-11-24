@@ -90,7 +90,7 @@ export function FormSubmit({
   }
 
   return (
-    <div className="flex justify-center w-full h-full items-center p-8">
+    <div className="flex justify-center items-center p-8">
       <div
         key={renderKey}
         className="max-w-[620px] flex flex-col gap-4 flex-grow bg-background w-full p-8 overflow-y-auto border rounded"
