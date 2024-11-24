@@ -108,8 +108,8 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0(react@19.0.0-rc.1)
       react-day-picker:
-        specifier: 9.3.2
-        version: 9.3.2(react@19.0.0-rc.1)
+        specifier: 8.10.1
+        version: 8.10.1(date-fns@4.1.0)(react@19.0.0-rc.1)
       react-dom:
         specifier: 19.0.0-rc.1
         version: 19.0.0-rc.1(react@19.0.0-rc.1)
@@ -214,9 +214,6 @@ packages:
 
   '@auth/drizzle-adapter@1.7.4':
     resolution: {integrity: sha512-OPZQakWWm5Hbx6okVMbtgI08WBliz/dCbFUXiPg9TThpp3Wh7MME/ubg4fW1oOp8P0gul6MkFvMVO733sVtd2w==}
-
-  '@date-fns/tz@1.2.0':
-    resolution: {integrity: sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==}
 
   '@dnd-kit/accessibility@3.1.1':
     resolution: {integrity: sha512-2P+YgaXF+gRsIihwwY1gCsQSYnu9Zyj2py8kY5fFvUM1qm2WA2u639R6YNVfU4GWr+ZM5mqEsfHZZLoRONbemw==}
@@ -2702,11 +2699,11 @@ packages:
     peerDependencies:
       react: ^16.3.0 || ^17.0.1 || ^18.0.0
 
-  react-day-picker@9.3.2:
-    resolution: {integrity: sha512-Rj2gPPVYKqZbSF8DxaLteHY+45zd6swf5yE3hmJ8m6VEqPI2ve9CuZsDvQ10tIt3ckRJ9hmLa5t0SsmLlXllhw==}
-    engines: {node: '>=18'}
+  react-day-picker@8.10.1:
+    resolution: {integrity: sha512-TMx7fNbhLk15eqcMt+7Z7S2KF7mfTId/XJDjKE8f+IUcFn0l08/kI4FiYTL/0yuOLmEcbR4Fwe3GJf/NiiMnPA==}
     peerDependencies:
-      react: '>=16.8.0'
+      date-fns: ^2.28.0 || ^3.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   react-dom@19.0.0-rc.1:
     resolution: {integrity: sha512-k8MfDX+4G+eaa1cXXI9QF4d+pQtYol3nx8vauqRWUEOPqC7NQn2qmEqUsLoSd28rrZUL+R3T2VC+kZ2Hyx1geQ==}
@@ -3147,8 +3144,6 @@ snapshots:
       - '@simplewebauthn/browser'
       - '@simplewebauthn/server'
       - nodemailer
-
-  '@date-fns/tz@1.2.0': {}
 
   '@dnd-kit/accessibility@3.1.1(react@19.0.0-rc.1)':
     dependencies:
@@ -5571,9 +5566,8 @@ snapshots:
       react: 19.0.0-rc.1
       tween-functions: 1.2.0
 
-  react-day-picker@9.3.2(react@19.0.0-rc.1):
+  react-day-picker@8.10.1(date-fns@4.1.0)(react@19.0.0-rc.1):
     dependencies:
-      '@date-fns/tz': 1.2.0
       date-fns: 4.1.0
       react: 19.0.0-rc.1
 
