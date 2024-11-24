@@ -3,11 +3,10 @@ import { localize, type Locale } from "@/lib/locale";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { AuthCard } from "@/components/auth-card";
 
-export default async function AuthErrorPage({
-  params: { lang }
-}: {
-  params: { lang: Locale };
-}) {
+type Params = Promise<{ lang: Locale }>;
+
+export default async function AuthErrorPage({ params }: { params: Params }) {
+  const { lang } = await params;
   const dictionary = await getDictionary(lang);
   return (
     <AuthCard

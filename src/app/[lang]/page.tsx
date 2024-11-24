@@ -7,12 +7,12 @@ import { getDictionary } from "@/lib/get-dictionary";
 import { CreateFormButtonWrapper } from "@/components/dashboard/create-form-button-wrapper";
 import { Button } from "@/components/ui/button";
 
-export default async function HomePage({
-  params: { lang }
-}: {
-  params: { lang: Locale };
-}) {
+type Params = Promise<{ lang: Locale }>;
+
+export default async function HomePage({ params }: { params: Params }) {
+  const { lang } = await params;
   const dictionary = await getDictionary(lang);
+
   return (
     <div className="flex min-h-screen flex-col items-center">
       <section

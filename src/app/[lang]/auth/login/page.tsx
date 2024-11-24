@@ -1,15 +1,19 @@
 "use client";
+
+import { use, useState, useTransition } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { useState, useTransition } from "react";
-import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { login } from "@/actions/auth/login";
 import { loginSchema, type LoginSchema } from "@/lib/schemas";
 import { localize } from "@/lib/locale";
 import { AppError, ERROR_CODES, isAppError } from "@/lib/error";
+import { useDictionary } from "@/components/dictionary-context";
 
+import { AuthCard } from "@/components/auth-card";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 import {
   Form,
   FormControl,
@@ -21,17 +25,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import { AuthCard } from "@/components/auth-card";
-import { useDictionary } from "@/components/dictionary-context";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-export default function LoginPage() {
+export default function LoginPage(props: { searchParams: SearchParams }) {
   const { dictionary } = useDictionary();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
+  const searchParams = use(props.searchParams);
+  const callbackUrl = searchParams["callbackUrl"] as string | undefined;
   const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
+    searchParams["error"] === "OAuthAccountNotLinked"
       ? dictionary["auth/login"]["error:registered-with-different-provider"]
       : "";
 

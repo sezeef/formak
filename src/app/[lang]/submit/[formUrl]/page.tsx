@@ -1,17 +1,17 @@
 import type { Locale } from "@/lib/locale";
 import type { FormElementInstance } from "@/components/builder/form-elements";
 import { getFormContentByUrl } from "@/actions/form/get-form-content";
-import { FormSubmit } from "@/components/form-submit";
 import { getDictionary } from "@/lib/get-dictionary";
 
-export default async function SubmitPage({
-  params: { formUrl, lang }
-}: {
-  params: {
-    formUrl: string;
-    lang: Locale;
-  };
-}) {
+import { FormSubmit } from "@/components/form-submit";
+
+type Params = Promise<{
+  formUrl: string;
+  lang: Locale;
+}>;
+
+export default async function SubmitPage({ params }: { params: Params }) {
+  const { formUrl, lang } = await params;
   const dictionary = await getDictionary(lang);
   const form = await getFormContentByUrl(formUrl);
 

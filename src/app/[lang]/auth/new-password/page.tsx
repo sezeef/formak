@@ -1,13 +1,17 @@
 "use client";
+
+import { use, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { useState, useTransition } from "react";
-import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import { newPassword } from "@/actions/auth/new-password";
 import { type NewPasswordSchema, newPasswordSchema } from "@/lib/schemas";
 import { localize } from "@/lib/locale";
 import { useDictionary } from "@/components/dictionary-context";
+import { AppError, ERROR_CODES, isAppError } from "@/lib/error";
 
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 import {
   Form,
   FormControl,
@@ -19,14 +23,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { AuthCard } from "@/components/auth-card";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
-import { AppError, ERROR_CODES, isAppError } from "@/lib/error";
 
-export default function NewPasswordPage() {
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+export default function NewPasswordPage(props: { searchParams: SearchParams }) {
   const { dictionary } = useDictionary();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const searchParams = use(props.searchParams);
+  const token = searchParams["token"] as string | undefined;
 
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");

@@ -1,17 +1,18 @@
 "use client";
+
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type ResetSchema, resetSchema } from "@/lib/schemas";
+
 import { reset } from "@/actions/auth/reset-password";
-import { useDictionary } from "@/components/dictionary-context";
+import { type ResetSchema, resetSchema } from "@/lib/schemas";
 import { localize } from "@/lib/locale";
 import { AppError, ERROR_CODES, isAppError } from "@/lib/error";
+import { useDictionary } from "@/components/dictionary-context";
 
 import { AuthCard } from "@/components/auth-card";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-
 import {
   Form,
   FormControl,

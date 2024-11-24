@@ -1,24 +1,29 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+
+import { use, useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
-import { useSearchParams } from "next/navigation";
+
 import { localize } from "@/lib/locale";
 import { newVerification } from "@/actions/auth/new-verification";
+import { isAppError } from "@/lib/error";
+import { useDictionary } from "@/components/dictionary-context";
 
 import { AuthCard } from "@/components/auth-card";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { useDictionary } from "@/components/dictionary-context";
-import { isAppError } from "@/lib/error";
 
-export default function NewVerificationPage() {
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+export default function NewVerificationPage(props: {
+  searchParams: SearchParams;
+}) {
   const { dictionary } = useDictionary();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
 
-  const searchParams = useSearchParams();
+  const searchParams = use(props.searchParams);
 
-  const token = searchParams.get("token");
+  const token = searchParams["token"] as string | undefined;
 
   const onSubmit = useCallback(() => {
     if (success || error) return;

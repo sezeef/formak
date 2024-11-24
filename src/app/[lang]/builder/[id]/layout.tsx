@@ -1,6 +1,7 @@
-import { DesignerContextProvider } from "@/components/builder/designer-context";
-import { auth } from "@/lib/auth";
 import { SessionProvider } from "next-auth/react";
+
+import { auth } from "@/lib/auth";
+import { DesignerContextProvider } from "@/components/builder/designer-context";
 
 export default async function BuilderLayout({
   children

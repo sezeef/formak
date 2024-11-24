@@ -1,10 +1,13 @@
 "use client";
+
 import { useEffect } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { useDictionary } from "@/components/dictionary-context";
+
 import { localize } from "@/lib/locale";
 import { isAppError } from "@/lib/error";
+import { useDictionary } from "@/components/dictionary-context";
+
+import { Button } from "@/components/ui/button";
 
 export default function ErrorPage({ error }: { error: Error }) {
   const { dictionary } = useDictionary();

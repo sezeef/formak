@@ -1,17 +1,15 @@
+import type { Locale } from "@/lib/locale";
+import { getDictionary } from "@/lib/get-dictionary";
 import { getForm } from "@/actions/form/get-form";
 
-import { getDictionary } from "@/lib/get-dictionary";
-import { type Locale } from "@/lib/locale";
 import { FormsPageHeader } from "@/components/forms/header";
 import { StatCards } from "@/components/forms/stat-cards";
 import { SubmissionsDataTable } from "@/components/forms/data-table";
 
-type FormDetailPageProps = {
-  params: {
+type Params = Promise<{
     id: string;
     lang: Locale;
-  };
-};
+}>;
 
 const calculateSubmissionRate = (
   visits: number,
@@ -21,8 +19,9 @@ const calculateSubmissionRate = (
 };
 
 export default async function FormDetailPage({
-  params: { id, lang }
-}: FormDetailPageProps) {
+  params
+}: { params: Params } ) {
+  const { id, lang } = await params;
   const dictionary = await getDictionary(lang);
   const form = await getForm(id);
 

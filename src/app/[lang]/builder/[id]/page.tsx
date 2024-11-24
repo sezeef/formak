@@ -1,17 +1,19 @@
-import { getForm } from "@/actions/form/get-form";
-import { FormBuilder } from "@/components/builder/form-builder";
+import type { Locale } from "@/lib/locale";
 import { getDictionary } from "@/lib/get-dictionary";
-import { Locale } from "@/lib/locale";
+import { getForm } from "@/actions/form/get-form";
+
+import { FormBuilder } from "@/components/builder/form-builder";
+
+type Params = Promise<{ id: string, lang: Locale }>;
 
 export default async function BuilderPage({
-  params: { id, lang }
+  params
 }: {
-  params: {
-    id: string;
-    lang: Locale;
-  };
+  params: Params
 }) {
+  const { id, lang } = await params;
   const dictionary = await getDictionary(lang);
+
   try {
     const form = await getForm(id);
     return <FormBuilder form={form} dictionary={dictionary} />;
