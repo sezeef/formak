@@ -1,5 +1,6 @@
 import type { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import type { CustomMiddleware } from "@/middlewares/chain";
+import { auth } from "@/lib/auth";
 import {
   DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
@@ -7,7 +8,6 @@ import {
   isGuestWhitelistRoute,
   isPublicRoute as isPublicRouteFn
 } from "@/lib/routes";
-// import { USER_ROLES } from "@/db/schema/user";
 
 export function withAuthMiddleware(
   middleware: CustomMiddleware
@@ -18,7 +18,7 @@ export function withAuthMiddleware(
     response: NextResponse
   ) => {
     const { nextUrl } = request;
-    
+
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
     if (isApiAuthRoute) {
       return middleware(request, event, response);
@@ -26,17 +26,11 @@ export function withAuthMiddleware(
 
     let authResult = null;
     try {
-      const sessionUrl = new URL("/api/auth/get-session", nextUrl.origin);
-      const sessionResponse = await fetch(sessionUrl.toString(), {
-        headers: {
-          cookie: request.headers.get("cookie") ?? "",
-        },
+      const session = await auth.api.getSession({
+        headers: request.headers
       });
 
-      if (sessionResponse.ok) {
-        const data = await sessionResponse.json();
-        authResult = data?.session ? { user: data.user } : null;
-      }
+      authResult = session?.user ? { user: session.user } : null;
     } catch (error) {
       console.error("[AUTH_MIDDLEWARE] Session fetch error:", error);
       authResult = null;

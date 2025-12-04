@@ -25,17 +25,24 @@ export async function create(data: FormSchema, locale: Locale) {
 
     redirect(localize(locale, `/builder/${form.formId}`));
   } else {
-    // If guest
+    // If guest - sign in anonymously with asResponse to get cookies
     const result = await auth.api.signInAnonymous({
-      headers: await headers()
+      headers: await headers(),
+      asResponse: true
     });
 
-    if (!result?.user) {
+    if (!result) {
+      throw new AppError(ERROR_CODES.SYS_DB_FAILURE);
+    }
+
+    const data = await result.json();
+
+    if (!data?.user) {
       throw new AppError(ERROR_CODES.SYS_DB_FAILURE);
     }
 
     const form = await createForm({
-      userId: result.user.id,
+      userId: data.user.id,
       name,
       description
     });

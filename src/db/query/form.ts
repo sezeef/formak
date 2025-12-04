@@ -7,13 +7,49 @@ import { formSubmissionTable } from "@/db/schema/form-submission";
 export async function createForm(data: InsertForm) {
   try {
     const db = await getDb();
-    return await db
-      .insert(formTable)
-      .values(data)
-      .returning({ formId: formTable.id })
-      .get();
+
+    // Try to insert with original name first
+    try {
+      return await db
+        .insert(formTable)
+        .values(data)
+        .returning({ formId: formTable.id })
+        .get();
+    } catch (insertError: any) {
+      // If UNIQUE constraint fails, append a number to the name
+      if (insertError?.code === 'SQLITE_CONSTRAINT') {
+        // Find the highest number suffix for this user and base name
+        const existingForms = await db
+          .select({ name: formTable.name })
+          .from(formTable)
+          .where(eq(formTable.userId, data.userId))
+          .all();
+
+        const baseName = data.name;
+        const pattern = new RegExp(`^${baseName}(?: \\((\\d+)\\))?$`);
+        let maxNumber = 0;
+
+        for (const form of existingForms) {
+          const match = form.name.match(pattern);
+          if (match) {
+            const num = match[1] ? parseInt(match[1]) : 0;
+            maxNumber = Math.max(maxNumber, num);
+          }
+        }
+
+        // Create with new number suffix
+        const newName = `${baseName} (${maxNumber + 1})`;
+        return await db
+          .insert(formTable)
+          .values({ ...data, name: newName })
+          .returning({ formId: formTable.id })
+          .get();
+      }
+      throw insertError;
+    }
   } catch (error) {
     console.error("Failed to create form: ", error);
+    throw error;
   }
 }
 

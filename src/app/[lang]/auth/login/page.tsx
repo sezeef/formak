@@ -1,13 +1,13 @@
 "use client";
 
-import { use, useState, useTransition } from "react";
+import { use, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
-import { login } from "@/actions/auth/login";
+import { authClient } from "@/lib/auth-client";
 import { loginSchema, type LoginSchema } from "@/lib/schemas";
 import { localize } from "@/lib/locale";
-import { isAppError } from "@/lib/error";
 import { useDictionary } from "@/components/dictionary-context";
 
 import { AuthCard } from "@/components/auth-card";
@@ -27,6 +27,7 @@ type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 export default function LoginPage(props: { searchParams: SearchParams }) {
   const { dictionary } = useDictionary();
+  const router = useRouter();
   const searchParams = use(props.searchParams);
   const callbackUrl = searchParams["callbackUrl"] as string | undefined;
   const urlError =
@@ -35,7 +36,7 @@ export default function LoginPage(props: { searchParams: SearchParams }) {
       : "";
 
   const [error, setError] = useState<string | undefined>("");
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -45,22 +46,29 @@ export default function LoginPage(props: { searchParams: SearchParams }) {
     }
   });
 
-  const onSubmit = (values: LoginSchema) => {
+  const onSubmit = async (values: LoginSchema) => {
     setError("");
+    setIsPending(true);
 
-    startTransition(() => {
-      login(values, callbackUrl).catch((error) => {
-        form.reset();
-        if (error instanceof Error && error.message === "NEXT_REDIRECT") {
-          throw error;
-        } else if (isAppError(error)) {
-          const code = error.message;
-          setError(dictionary.error[code]);
-        } else {
-          setError(dictionary.error.AUTH_UNK_ERR);
-        }
+    try {
+      const result = await authClient.signIn.email({
+        email: values.email,
+        password: values.password,
       });
-    });
+
+      if (result.error) {
+        setError(dictionary.error.AUTH_INVALID_CRED);
+        form.reset();
+      } else {
+        // Redirect on successful login
+        router.push(callbackUrl || localize(dictionary.lang, "/dashboard"));
+      }
+    } catch {
+      setError(dictionary.error.AUTH_UNK_ERR);
+      form.reset();
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (

@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 import { localize } from "@/lib/locale";
-import { AppError, ERROR_CODES, isAppError } from "@/lib/error";
-import { register } from "@/actions/auth/register";
+import { authClient } from "@/lib/auth-client";
 import { type RegisterSchema, registerSchema } from "@/lib/schemas";
 import { useDictionary } from "@/components/dictionary-context";
+import { transferAnonymousForms } from "@/actions/form/transfer-anonymous-forms";
 
 import { AuthCard } from "@/components/auth-card";
 import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
 import {
   Form,
   FormControl,
@@ -26,9 +26,9 @@ import { Input } from "@/components/ui/input";
 
 export default function RegisterPage() {
   const { dictionary } = useDictionary();
+  const router = useRouter();
   const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
@@ -39,28 +39,44 @@ export default function RegisterPage() {
     }
   });
 
-  const onSubmit = (values: RegisterSchema) => {
+  const onSubmit = async (values: RegisterSchema) => {
     setError("");
-    setSuccess("");
+    setIsPending(true);
 
-    startTransition(() => {
-      register(values)
-        .then(({ status }) => {
-          if (status === "CONFIRMATION_SENT") {
-            setSuccess(dictionary.auth["message:confirm-sent"]);
-          } else {
-            throw new AppError(ERROR_CODES.SYS_INTERNAL_ERR);
-          }
-        })
-        .catch((error) => {
-          if (isAppError(error)) {
-            const code = error.message;
-            setError(dictionary.error[code]);
-          } else {
-            setError(dictionary.error.AUTH_UNK_ERR);
-          }
-        });
-    });
+    try {
+      // Check if there's an existing anonymous session
+      const currentSession = await authClient.getSession();
+      const oldUserId = currentSession?.data?.user?.id;
+      const isAnonymous = currentSession?.data?.user?.isAnonymous;
+
+      // Register new user
+      const result = await authClient.signUp.email({
+        email: values.email,
+        password: values.password,
+        name: values.name,
+      });
+
+      if (result.error) {
+        if (result.error.message?.includes("already exists") || result.error.message?.includes("duplicate")) {
+          setError(dictionary.error.AUTH_EXISTING_EMAIL);
+        } else {
+          setError(dictionary.error.SYS_DB_FAILURE);
+        }
+      } else {
+        // If user was anonymous and had forms, transfer them to new account
+        if (oldUserId && isAnonymous && result.data?.user?.id) {
+          await transferAnonymousForms(oldUserId, result.data.user.id);
+        }
+
+        // Redirect on successful registration
+        router.push(localize(dictionary.lang, "/dashboard"));
+        router.refresh();
+      }
+    } catch {
+      setError(dictionary.error.AUTH_UNK_ERR);
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (
@@ -132,7 +148,6 @@ export default function RegisterPage() {
             />
           </div>
           <FormError message={error} />
-          <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
             {dictionary["auth/register"]["button:register"]}
           </Button>
