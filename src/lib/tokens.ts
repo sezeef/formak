@@ -3,16 +3,16 @@ import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { passwordResetTokenTable, twoFactorTokenTable } from "@/db/schema/user";
-import { getPasswordResetTokenByEmail } from "@/db/query/password-reset-token";
+import { getPasswordResetTokenByEmail } from "@/db/query/_password-reset-token";
 import {
   createVerificationToken,
   deleteVerificationTokenById,
   getVerificationTokenByEmail
-} from "@/db/query/verification-token";
+} from "@/db/query/_verification-token";
 import {
   deleteTwoFactorTokenById,
   getTwoFactorTokenByEmail
-} from "@/db/query/two-factor-token";
+} from "@/db/query/_two-factor-token";
 
 export async function generateTwoFactorToken(email: string) {
   const db = await getDb();

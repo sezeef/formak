@@ -7,6 +7,8 @@ import { getDictionary } from "@/lib/get-dictionary";
 import { CreateFormButtonWrapper } from "@/components/dashboard/create-form-button-wrapper";
 import { Button } from "@/components/ui/button";
 
+export const dynamic = "force-dynamic";
+
 type Params = Promise<{ lang: Locale }>;
 
 export default async function HomePage({ params }: { params: Params }) {

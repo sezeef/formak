@@ -1,11 +1,11 @@
-import { relations, sql } from "drizzle-orm";
+// import { relations, sql } from "drizzle-orm";
 import {
   sqliteTable,
   text,
-  integer,
-  primaryKey
+  integer
+  // primaryKey
 } from "drizzle-orm/sqlite-core";
-import { formTable } from "@/db/schema/form";
+// import { formTable } from "@/db/schema/form";
 
 export const USER_ROLES = {
   ADMIN: "ADMIN",
@@ -29,85 +29,136 @@ export const userTable = sqliteTable("user", {
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
-  role: text("role", { enum: userRoles }).notNull().default(USER_ROLES.USER),
-  password: text("password").notNull(),
-  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
-  image: text("image"),
-  createdAt: text("createdAt")
-    .default(sql`(CURRENT_TIMESTAMP)`)
+  emailVerified: integer("email_verified", { mode: "boolean" })
+    .$defaultFn(() => false)
     .notNull(),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).$onUpdate(
-    () => new Date()
-  )
+  image: text("image"),
+  role: text("role", { enum: userRoles }).notNull().default(USER_ROLES.USER),
+  isAnonymous: integer("is_anonymous", { mode: "boolean" }),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
 });
 
 export type InsertUser = typeof userTable.$inferInsert;
 export type SelectUser = typeof userTable.$inferSelect;
 
-export const verificationTokenTable = sqliteTable(
-  "verification-token",
-  {
-    id: text("id")
-      .notNull()
-      .$defaultFn(() => crypto.randomUUID()),
-    email: text("email").notNull().unique(),
-    token: text("token").notNull().unique(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull()
-  },
-  (vt) => ({
-    pk: primaryKey({ columns: [vt.id, vt.token] })
-  })
-);
 
-export type InsertVerificationToken =
-  typeof verificationTokenTable.$inferInsert;
+export const sessionTable = sqliteTable("session", {
+  id: text("id").primaryKey(),
+  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id)
+});
 
-export const passwordResetTokenTable = sqliteTable(
-  "password-reset-token",
-  {
-    id: text("id")
-      .notNull()
-      .$defaultFn(() => crypto.randomUUID()),
-    email: text("email").notNull().unique(),
-    token: text("token").notNull().unique(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull()
-  },
-  (vt) => ({
-    pk: primaryKey({ columns: [vt.id, vt.token] })
-  })
-);
-
-export const twoFactorTokenTable = sqliteTable(
-  "two-factor-token",
-  {
-    id: text("id")
-      .notNull()
-      .$defaultFn(() => crypto.randomUUID()),
-    email: text("email").notNull().unique(),
-    token: text("token").notNull().unique(),
-    expires: integer("expires", { mode: "timestamp_ms" }).notNull()
-  },
-  (vt) => ({
-    pk: primaryKey({ columns: [vt.id, vt.token] })
-  })
-);
-
-export const twoFactorConfirmationTable = sqliteTable(
-  "two-factor-confirmation",
-  {
-    id: text("id")
-      .notNull()
-      .$defaultFn(() => crypto.randomUUID()),
-    userId: text("userId")
-      .notNull()
-      .references(() => userTable.id, { onDelete: "cascade" })
-  }
-);
-
-export const userRelations = relations(userTable, ({ one, many }) => ({
-  twoFactorConfirmations: one(twoFactorConfirmationTable, {
-    fields: [userTable.id],
-    references: [twoFactorConfirmationTable.userId]
+export const accountTable = sqliteTable("account", {
+  id: text("id").primaryKey(),
+  accountId: text("account_id").notNull(),
+  providerId: text("provider_id").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  idToken: text("id_token"),
+  accessTokenExpiresAt: integer("access_token_expires_at", {
+    mode: "timestamp"
   }),
-  posts: many(formTable)
-}));
+  refreshTokenExpiresAt: integer("refresh_token_expires_at", {
+    mode: "timestamp"
+  }),
+  scope: text("scope"),
+  password: text("password"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull()
+});
+
+export const verificationTable = sqliteTable("verification", {
+  id: text("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(
+    () => /* @__PURE__ */ new Date(),
+  ),
+});
+
+// export const verificationTokenTable = sqliteTable(
+//   "verification-token",
+//   {
+//     id: text("id")
+//       .notNull()
+//       .$defaultFn(() => crypto.randomUUID()),
+//     email: text("email").notNull().unique(),
+//     token: text("token").notNull().unique(),
+//     expires: integer("expires", { mode: "timestamp_ms" }).notNull()
+//   },
+//   (vt) => ({
+//     pk: primaryKey({ columns: [vt.id, vt.token] })
+//   })
+// );
+//
+// export type InsertVerificationToken =
+//   typeof verificationTokenTable.$inferInsert;
+
+// export const passwordResetTokenTable = sqliteTable(
+//   "password-reset-token",
+//   {
+//     id: text("id")
+//       .notNull()
+//       .$defaultFn(() => crypto.randomUUID()),
+//     email: text("email").notNull().unique(),
+//     token: text("token").notNull().unique(),
+//     expires: integer("expires", { mode: "timestamp_ms" }).notNull()
+//   },
+//   (vt) => ({
+//     pk: primaryKey({ columns: [vt.id, vt.token] })
+//   })
+// );
+
+// export const twoFactorTokenTable = sqliteTable(
+//   "two-factor-token",
+//   {
+//     id: text("id")
+//       .notNull()
+//       .$defaultFn(() => crypto.randomUUID()),
+//     email: text("email").notNull().unique(),
+//     token: text("token").notNull().unique(),
+//     expires: integer("expires", { mode: "timestamp_ms" }).notNull()
+//   },
+//   (vt) => ({
+//     pk: primaryKey({ columns: [vt.id, vt.token] })
+//   })
+// );
+
+// export const twoFactorConfirmationTable = sqliteTable(
+//   "two-factor-confirmation",
+//   {
+//     id: text("id")
+//       .notNull()
+//       .$defaultFn(() => crypto.randomUUID()),
+//     userId: text("userId")
+//       .notNull()
+//       .references(() => userTable.id, { onDelete: "cascade" })
+//   }
+// );
+
+// export const userRelations = relations(userTable, ({ one, many }) => ({
+//   twoFactorConfirmations: one(twoFactorConfirmationTable, {
+//     fields: [userTable.id],
+//     references: [twoFactorConfirmationTable.userId]
+//   }),
+//   posts: many(formTable)
+// }));

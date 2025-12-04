@@ -1,6 +1,6 @@
 "use server";
 import { type ResetSchema, resetSchema, unsafeValidate } from "@/lib/schemas";
-import { getUserByEmail } from "@/db/query/user";
+import { getUserByEmail } from "@/db/query/_user";
 import { sendPasswordResetEmail } from "@/lib/email";
 import { generatePasswordResetToken } from "@/lib/tokens";
 import { AppError, ERROR_CODES } from "@/lib/error";

@@ -8,8 +8,8 @@ import {
 import {
   deleteResetPasswordTokenByTokenId,
   getPasswordResetTokenByToken
-} from "@/db/query/password-reset-token";
-import { getUserByEmail, updateUserPasswordById } from "@/db/query/user";
+} from "@/db/query/_password-reset-token";
+import { getUserByEmail, updateUserPasswordById } from "@/db/query/_user";
 import { AppError, ERROR_CODES } from "@/lib/error";
 
 export async function newPassword(

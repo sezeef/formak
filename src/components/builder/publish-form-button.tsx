@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { USER_ROLES } from "@/db/schema/user";
+// import { USER_ROLES } from "@/db/schema/user";
 import Link from "next/link";
 import { localize } from "@/lib/locale";
 import { useCurrentUserOrGuest } from "../use-current-user";
@@ -50,7 +50,7 @@ export function PublishFormButton({
     }
   }
 
-  const isGuest = user?.role === USER_ROLES.GUEST;
+  const isGuest = user?.isAnonymous;
 
   const dialogContent = isGuest
     ? {

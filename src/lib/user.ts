@@ -1,12 +1,20 @@
 "use server";
-import { USER_ROLES } from "@/db/schema/user";
+import { headers } from "next/headers";
+// import { USER_ROLES } from "@/db/schema/user";
 import { auth } from "@/lib/auth";
 import { AppError, ERROR_CODES } from "@/lib/error";
 
 export async function safeGetUser() {
-  const session = await auth();
-  if (session?.user && session.user.role !== USER_ROLES.GUEST) {
-    return session.user;
+  let authState: Awaited<ReturnType<typeof auth.api.getSession>> = null;
+
+  try {
+    authState = await auth.api.getSession({
+      headers: await headers(),
+    });
+    return authState?.user ?? null;
+  } catch (error) {
+    console.error("[HOMEPAGE] Error:\n", error);
+    return null;
   }
 }
 
@@ -19,14 +27,16 @@ export async function unsafeGetUser() {
 }
 
 export async function safeGetUserOrGuest() {
-  const session = await auth();
-  return session?.user;
+  return safeGetUser();
+  // const session = await auth();
+  // return session?.user;
 }
 
 export async function unsafeGetUserOrGuest() {
-  const user = await safeGetUserOrGuest();
-  if (!user) {
-    throw new AppError(ERROR_CODES.NET_UNAUTHORIZED);
-  }
-  return user;
+  return unsafeGetUser();
+  // const user = await safeGetUserOrGuest();
+  // if (!user) {
+  //   throw new AppError(ERROR_CODES.NET_UNAUTHORIZED);
+  // }
+  // return user;
 }

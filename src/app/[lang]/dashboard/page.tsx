@@ -9,6 +9,8 @@ import { CreateFormButton } from "@/components/dashboard/create-form-button";
 import { CreateFormButtonWrapper } from "@/components/dashboard/create-form-button-wrapper";
 import { Separator } from "@/components/ui/separator";
 
+export const dynamic = "force-dynamic";
+
 type Params = Promise<{ lang: Locale }>;
 
 export default async function BuilderPage({

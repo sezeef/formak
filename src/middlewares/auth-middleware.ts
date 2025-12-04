@@ -1,6 +1,5 @@
 import type { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import type { CustomMiddleware } from "@/middlewares/chain";
-import { auth } from "@/lib/auth";
 import {
   DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
@@ -8,7 +7,7 @@ import {
   isGuestWhitelistRoute,
   isPublicRoute as isPublicRouteFn
 } from "@/lib/routes";
-import { USER_ROLES } from "@/db/schema/user";
+// import { USER_ROLES } from "@/db/schema/user";
 
 export function withAuthMiddleware(
   middleware: CustomMiddleware
@@ -18,39 +17,54 @@ export function withAuthMiddleware(
     event: NextFetchEvent,
     response: NextResponse
   ) => {
-    const authResult = await auth();
     const { nextUrl } = request;
-
-    const isLoggedIn = authResult?.user != null;
+    
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-    const isPublicRoute = isPublicRouteFn(nextUrl.pathname);
-    const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-    const isGuest = authResult?.user.role === USER_ROLES.GUEST;
-    const isGuestWhitelist = isGuestWhitelistRoute(nextUrl.pathname);
-
-    // all api auth routes are public
     if (isApiAuthRoute) {
       return middleware(request, event, response);
     }
 
+    let authResult = null;
+    try {
+      const sessionUrl = new URL("/api/auth/get-session", nextUrl.origin);
+      const sessionResponse = await fetch(sessionUrl.toString(), {
+        headers: {
+          cookie: request.headers.get("cookie") ?? "",
+        },
+      });
+
+      if (sessionResponse.ok) {
+        const data = await sessionResponse.json();
+        authResult = data?.session ? { user: data.user } : null;
+      }
+    } catch (error) {
+      console.error("[AUTH_MIDDLEWARE] Session fetch error:", error);
+      authResult = null;
+    }
+
+    const isLoggedIn = authResult?.user != null;
+    const isPublicRoute = isPublicRouteFn(nextUrl.pathname);
+    const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+    const isGuest = authResult?.user?.isAnonymous;
+    const isGuestWhitelist = isGuestWhitelistRoute(nextUrl.pathname);
+
+    // Handle auth routes (login, register, etc.)
     if (isAuthRoute) {
-      // redirect users away from auth routes to default redirect
+      // Redirect logged-in non-guest users away from auth routes
       if (isLoggedIn && !isGuest) {
         return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
       }
-      // non-users and guests can access auth routes
+      // Allow non-users and guests to access auth routes
       return middleware(request, event, response);
     }
 
-    // redirect non-users & guests trying to access private routes to login
+    // Handle private routes - redirect non-authenticated users or unauthorized guests
     if (!isPublicRoute && (!isLoggedIn || (isGuest && !isGuestWhitelist))) {
       let callbackUrl = nextUrl.pathname;
       if (nextUrl.search) {
         callbackUrl += nextUrl.search;
       }
-
       const encodedCallbackUrl = encodeURIComponent(callbackUrl);
-
       return Response.redirect(
         new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
       );
@@ -59,3 +73,65 @@ export function withAuthMiddleware(
     return middleware(request, event, response);
   };
 }
+
+// import type { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+// import type { CustomMiddleware } from "@/middlewares/chain";
+// import { auth } from "@/lib/auth";
+// import {
+//   DEFAULT_LOGIN_REDIRECT,
+//   apiAuthPrefix,
+//   authRoutes,
+//   isGuestWhitelistRoute,
+//   isPublicRoute as isPublicRouteFn
+// } from "@/lib/routes";
+// import { USER_ROLES } from "@/db/schema/user";
+//
+// export function withAuthMiddleware(
+//   middleware: CustomMiddleware
+// ): CustomMiddleware {
+//   return async (
+//     request: NextRequest,
+//     event: NextFetchEvent,
+//     response: NextResponse
+//   ) => {
+//     let authResult = await auth();
+//     const { nextUrl } = request;
+//
+//     const isLoggedIn = authResult?.user != null;
+//     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+//     const isPublicRoute = isPublicRouteFn(nextUrl.pathname);
+//     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+//     const isGuest = authResult?.user.role === USER_ROLES.GUEST;
+//     const isGuestWhitelist = isGuestWhitelistRoute(nextUrl.pathname);
+//
+//     // all api auth routes are public
+//     if (isApiAuthRoute) {
+//       return middleware(request, event, response);
+//     }
+//
+//     if (isAuthRoute) {
+//       // redirect users away from auth routes to default redirect
+//       if (isLoggedIn && !isGuest) {
+//         return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+//       }
+//       // non-users and guests can access auth routes
+//       return middleware(request, event, response);
+//     }
+//
+//     // redirect non-users & guests trying to access private routes to login
+//     if (!isPublicRoute && (!isLoggedIn || (isGuest && !isGuestWhitelist))) {
+//       let callbackUrl = nextUrl.pathname;
+//       if (nextUrl.search) {
+//         callbackUrl += nextUrl.search;
+//       }
+//
+//       const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+//
+//       return Response.redirect(
+//         new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+//       );
+//     }
+//
+//     return middleware(request, event, response);
+//   };
+// }

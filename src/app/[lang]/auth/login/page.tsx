@@ -1,19 +1,17 @@
 "use client";
 
 import { use, useState, useTransition } from "react";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { login } from "@/actions/auth/login";
 import { loginSchema, type LoginSchema } from "@/lib/schemas";
 import { localize } from "@/lib/locale";
-import { AppError, ERROR_CODES, isAppError } from "@/lib/error";
+import { isAppError } from "@/lib/error";
 import { useDictionary } from "@/components/dictionary-context";
 
 import { AuthCard } from "@/components/auth-card";
 import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
 import {
   Form,
   FormControl,
@@ -36,9 +34,7 @@ export default function LoginPage(props: { searchParams: SearchParams }) {
       ? dictionary["auth/login"]["error:registered-with-different-provider"]
       : "";
 
-  const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<LoginSchema>({
@@ -51,32 +47,19 @@ export default function LoginPage(props: { searchParams: SearchParams }) {
 
   const onSubmit = (values: LoginSchema) => {
     setError("");
-    setSuccess("");
 
     startTransition(() => {
-      login(values, callbackUrl)
-        .then(({ status }) => {
-          if (status === "VERIFICATION_SENT") {
-            form.reset();
-            setSuccess(dictionary.auth["message:confirm-sent"]);
-          } else if (status === "2FA_SENT") {
-            setShowTwoFactor(true);
-          } else {
-            // should be unreachable
-            throw new AppError(ERROR_CODES.SYS_INTERNAL_ERR);
-          }
-        })
-        .catch((error) => {
-          form.reset();
-          if (error instanceof Error && error.message === "NEXT_REDIRECT") {
-            throw error;
-          } else if (isAppError(error)) {
-            const code = error.message;
-            setError(dictionary.error[code]);
-          } else {
-            setError(dictionary.error.AUTH_UNK_ERR);
-          }
-        });
+      login(values, callbackUrl).catch((error) => {
+        form.reset();
+        if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+          throw error;
+        } else if (isAppError(error)) {
+          const code = error.message;
+          setError(dictionary.error[code]);
+        } else {
+          setError(dictionary.error.AUTH_UNK_ERR);
+        }
+      });
     });
   };
 
@@ -90,93 +73,66 @@ export default function LoginPage(props: { searchParams: SearchParams }) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
-            {showTwoFactor && (
-              <FormField
-                control={form.control}
-                name="code"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {dictionary["auth/login"]["input.label:two-factor-code"]}
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        disabled={isPending}
-                        placeholder="123456"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-            {!showTwoFactor && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {dictionary["auth"]["input.label:email"]}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={isPending}
-                          placeholder="john.doe@example.com"
-                          type="email"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        {dictionary["auth"]["input.label:password"]}
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={isPending}
-                          placeholder="******"
-                          type="password"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                      <Button
-                        size="sm"
-                        variant="link"
-                        asChild
-                        className="px-0 font-normal"
-                      >
-                        <Link
-                          href={localize(
-                            dictionary.lang,
-                            "/auth/reset-password"
-                          )}
-                        >
-                          {dictionary["auth/login"]["link:forgot-password"]}
-                        </Link>
-                      </Button>
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {dictionary["auth"]["input.label:email"]}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={isPending}
+                      placeholder="john.doe@example.com"
+                      type="email"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {dictionary["auth"]["input.label:password"]}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={isPending}
+                      placeholder="******"
+                      type="password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                  {/* Password reset disabled for now */}
+                  {/* <Button
+                    size="sm"
+                    variant="link"
+                    asChild
+                    className="px-0 font-normal"
+                  >
+                    <Link
+                      href={localize(
+                        dictionary.lang,
+                        "/auth/reset-password"
+                      )}
+                    >
+                      {dictionary["auth/login"]["link:forgot-password"]}
+                    </Link>
+                  </Button> */}
+                </FormItem>
+              )}
+            />
           </div>
           <FormError message={error || urlError} />
-          <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
-            {showTwoFactor
-              ? dictionary["auth/login"]["button:confirm"]
-              : dictionary["auth/login"]["button:login"]}
+            {dictionary["auth/login"]["button:login"]}
           </Button>
         </form>
       </Form>

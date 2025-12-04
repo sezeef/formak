@@ -4,7 +4,7 @@ import { use, useCallback, useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
 import { localize } from "@/lib/locale";
-import { newVerification } from "@/actions/auth/new-verification";
+import { newVerification } from "@/actions/auth/_new-verification";
 import { isAppError } from "@/lib/error";
 import { useDictionary } from "@/components/dictionary-context";
 
