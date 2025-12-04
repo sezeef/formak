@@ -1,5 +1,6 @@
 "use server";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { safeGetUser } from "@/lib/user";
 import { formSchema, unsafeValidate, type FormSchema } from "@/lib/schemas";
 import { createForm } from "@/db/query/form";
@@ -25,14 +26,16 @@ export async function create(data: FormSchema, locale: Locale) {
     redirect(localize(locale, `/builder/${form.formId}`));
   } else {
     // If guest
-    const guest = (await auth.api.signInAnonymous())?.user;
+    const result = await auth.api.signInAnonymous({
+      headers: await headers()
+    });
 
-    if (!guest) {
+    if (!result?.user) {
       throw new AppError(ERROR_CODES.SYS_DB_FAILURE);
     }
 
     const form = await createForm({
-      userId: guest.id,
+      userId: result.user.id,
       name,
       description
     });
